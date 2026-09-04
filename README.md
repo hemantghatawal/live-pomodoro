@@ -37,6 +37,8 @@ One `requestAnimationFrame` loop writes CSS custom properties onto the root elem
 | File | Contents |
 |---|---|
 | [PLAN.md](PLAN.md) | Full build plan: design read, clock math, art pipeline, motion spec, architecture |
+| [DEV_LEARN.md](DEV_LEARN.md) | The techniques behind this, taught from the code, with resources |
+| [ART_PROMPTS.md](ART_PROMPTS.md) | Ready-to-paste prompts for all 35 art assets |
 | [PROGRESS.md](PROGRESS.md) | Task tracker, phases 0 to 10, including the asset generation checklist |
 
 ## Development
