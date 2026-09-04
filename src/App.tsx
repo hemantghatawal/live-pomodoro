@@ -1,51 +1,91 @@
+import { useCallback, useState } from 'react';
+import { AmbientBackdrop } from './components/scene/AmbientBackdrop';
+import { Controls } from './components/hud/Controls';
+import { Countdown } from './components/hud/Countdown';
+import { Wordmark } from './components/hud/Wordmark';
 import { useCycle } from './hooks/useCycle';
+import { useDocumentTitle } from './hooks/useDocumentTitle';
+import { usePhaseTransition } from './hooks/usePhaseTransition';
+import { usePreferences } from './hooks/usePreferences';
+import { useWakeLock } from './hooks/useWakeLock';
+import { ensureAudio, playChime } from './lib/audio';
+import { notifyPhase, notifyState, requestNotify } from './lib/notify';
 
-/**
- * Phase 1 verification surface. The real HUD replaces this in Phase 2.
- */
+const clockTime = (epochMs: number): string =>
+  new Date(epochMs).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
 export function App() {
-  const { phase, countdown, cycleIndex, nextFocusAt, stop, activity, pose } = useCycle();
+  const cycle = useCycle();
+  const { prefs, set } = usePreferences();
+  const [permission, setPermission] = useState(notifyState);
+  const { supported: wakeLockSupported } = useWakeLock(prefs.awake);
 
-  const nextFocus = new Date(nextFocusAt).toLocaleTimeString([], {
-    hour: 'numeric',
-    minute: '2-digit',
+  useDocumentTitle(cycle.countdown, cycle.phase);
+
+  usePhaseTransition(cycle.phase, (phase) => {
+    if (prefs.notify) notifyPhase(phase);
+    if (prefs.sound) playChime(phase);
   });
 
+  const onNotify = useCallback(() => {
+    if (prefs.notify) {
+      set('notify', false);
+      return;
+    }
+    // Permission is requested here, inside the gesture, never on load.
+    void requestNotify().then((next) => {
+      setPermission(next);
+      if (next === 'granted') set('notify', true);
+    });
+  }, [prefs.notify, set]);
+
+  const onSound = useCallback(() => {
+    const next = !prefs.sound;
+    if (next) {
+      // Unlocks the AudioContext under the autoplay policy, and lets someone
+      // hear what they just switched on rather than waiting 20 minutes to find out.
+      ensureAudio();
+      playChime(cycle.phase);
+    }
+    set('sound', next);
+  }, [prefs.sound, cycle.phase, set]);
+
+  const onAwake = useCallback(() => set('awake', !prefs.awake), [prefs.awake, set]);
+
+  const nextLabel =
+    cycle.phase === 'focus'
+      ? `Break at ${clockTime(cycle.nextBoundaryAt)}`
+      : `Focus at ${clockTime(cycle.nextBoundaryAt)}`;
+
   return (
-    <main className="min-h-[100dvh] p-10 flex flex-col justify-end gap-8">
-      <div>
-        <p className="font-mono text-xs uppercase tracking-widest text-ember">{phase}</p>
-        <p
-          className="tnum font-mono font-medium leading-none text-zinc-100"
-          style={{ fontSize: 'clamp(4rem, 18vw, 11rem)' }}
-        >
-          {countdown}
-        </p>
-        <p className="mt-3 text-sm text-zinc-400">Next focus block at {nextFocus}</p>
+    <>
+      <AmbientBackdrop />
+
+      <div className="mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col justify-between gap-16 px-6 py-6 sm:px-10 sm:py-8">
+        <header className="flex items-start justify-between gap-6">
+          <Wordmark />
+          <Controls
+            notify={prefs.notify}
+            notifyDenied={permission === 'denied' || permission === 'unsupported'}
+            sound={prefs.sound}
+            awake={prefs.awake}
+            wakeLockSupported={wakeLockSupported}
+            onNotify={onNotify}
+            onSound={onSound}
+            onAwake={onAwake}
+          />
+        </header>
+
+        {/* Anchored bottom-left, so the room has the rest of the frame. */}
+        <main>
+          <Countdown countdown={cycle.countdown} phase={cycle.phase} nextLabel={nextLabel} />
+        </main>
       </div>
 
-      <dl className="grid grid-cols-2 gap-x-8 gap-y-2 font-mono text-xs text-zinc-500 sm:grid-cols-4">
-        {[
-          ['cycle', cycleIndex],
-          ['light', stop],
-          ['doing', phase === 'focus' ? pose : activity],
-          ['sundial', <SundialReadout key="s" />],
-        ].map(([k, v]) => (
-          <div key={String(k)}>
-            <dt className="text-zinc-600">{k}</dt>
-            <dd className="text-zinc-300">{v}</dd>
-          </div>
-        ))}
-      </dl>
-
-      {/* Proves the CSS custom properties are live: driven by --progress alone. */}
-      <div className="h-px w-full bg-zinc-800">
-        <div className="h-px bg-ember" style={{ width: 'var(--shaft-x)' }} />
-      </div>
-    </main>
+      {/* Announces the flip only. Announcing every second would be unusable. */}
+      <p aria-live="polite" className="sr-only">
+        {cycle.phase === 'focus' ? 'Focus block started' : 'Break started'}
+      </p>
+    </>
   );
-}
-
-function SundialReadout() {
-  return <span style={{ fontVariantNumeric: 'tabular-nums' }}>see bar</span>;
 }

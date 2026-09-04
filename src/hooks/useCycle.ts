@@ -22,6 +22,8 @@ export interface CycleView {
   /** MM:SS, already formatted. */
   countdown: string;
   cycleIndex: number;
+  /** Epoch ms at which the phase flips next, whichever direction. */
+  nextBoundaryAt: number;
   /** Epoch ms at which the next focus block begins. */
   nextFocusAt: number;
   stop: DaylightStop;
@@ -38,6 +40,7 @@ function view(now: number): CycleView {
     phase: c.phase,
     countdown: formatCountdown(c.remainingMs),
     cycleIndex: c.cycleIndex,
+    nextBoundaryAt: c.nextBoundary,
     nextFocusAt: nextFocusStart(now),
     stop: d.stop,
     activity: breakActivity(c.cycleIndex, d.stop),

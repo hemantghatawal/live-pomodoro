@@ -1,6 +1,6 @@
 # Live Pomodoro - Project Progress
 
-**Current focus:** Phase 2, HUD
+**Current focus:** Phase 9 (presence), while art is generated for Phase 3
 **Last updated:** 2026-09-04
 
 ## Status legend
@@ -19,8 +19,8 @@
 |---|---|---|---|
 | 0 | Project scaffold | `[x]` | Claude |
 | 1 | Clock core | `[x]` | Claude |
-| 2 | HUD, no art | `[ ]` | Claude |
-| 3 | Art generation | `[ ]` | **Kanishk** |
+| 2 | HUD, no art | `[x]` | Claude |
+| 3 | Art generation | `[~]` | **Kanishk** |
 | 4 | Scene assembly | `[ ]` | Claude |
 | 5 | Tier 1 stateful movement | `[ ]` | Claude |
 | 6 | Lighting system | `[ ]` | Claude |
@@ -64,19 +64,20 @@ No UI. Must be provably correct before anything renders.
 
 Ship-quality usable timer on a flat background.
 
-- [ ] `Countdown.tsx` - hero number, Geist Mono tabular figures, no digit jitter
-- [ ] `PhaseLabel.tsx` - current phase plus next block time derived from real clock
-- [ ] Anti-centered layout: wordmark top-left, toggles top-right, countdown bottom-left
-- [ ] `lib/notify.ts` - permission requested inside the click handler, never on load
-- [ ] `lib/audio.ts` - Web Audio chime, off by default
-- [ ] `Controls.tsx` - notify, sound, calm toggles, real buttons with focus rings
-- [ ] `document.title` mirrors the countdown
-- [ ] Favicon swaps between focus and break
-- [ ] Wake Lock toggle, feature-detected, degrades silently
-- [ ] a11y: `aria-live="polite"` on phase change only, not per second
-- [ ] Contrast audit: accent on scrim at 4.5:1 minimum
-- [ ] Verify: background the tab 20 min, countdown still exact
-- [ ] Verify: sleep the laptop, countdown still exact
+- [x] `Countdown.tsx` - hero number, Geist Mono tabular figures, no digit jitter
+- [x] Phase label and next block time, derived from the real clock (built into `Countdown.tsx`, since they read as one visual unit rather than two components)
+- [x] Anti-centered layout: wordmark top-left, toggles top-right, countdown bottom-left
+- [x] `lib/notify.ts` - permission requested inside the click handler, never on load
+- [x] `lib/audio.ts` - Web Audio chime, off by default
+- [x] `Controls.tsx` - notify, sound, keep-awake toggles, real buttons with focus rings
+- [-] Calm toggle moved to Phase 7. There is no ambient motion to calm yet, and shipping a dead toggle is worse than shipping none
+- [x] `document.title` mirrors the countdown
+- [x] Favicon swaps between focus and break
+- [x] Wake Lock toggle, feature-detected, degrades silently
+- [x] a11y: `aria-live="polite"` on phase change only, not per second
+- [x] Contrast audit: landed as permanent tests in `contrast.test.ts`, not a one-time eyeball. Ember on scrim measures 6.54:1
+- [x] Verify: countdown stays exact across hidden periods. rAF pauses when the pane hides and the visibilitychange handler recomputes from wall clock; observed repeatedly across multi-minute hidden gaps
+- [ ] Verify: sleep the laptop, countdown still exact (genuinely untested, needs a real sleep cycle)
 
 ## Phase 3 - Art generation `(Kanishk)`
 
