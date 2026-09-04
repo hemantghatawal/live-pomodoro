@@ -1,0 +1,52 @@
+/*
+  Scene custom properties.
+
+  A single requestAnimationFrame loop writes these onto the root element and
+  CSS does everything else. No component re-renders per frame. Registering them
+  with @property gives them real types, so they interpolate rather than snap.
+*/
+
+@property --progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --daylight {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0.5;
+}
+
+@property --shaft-x {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+@property --dial-deg {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
+/* 1 during focus, 0 during break. Lets CSS switch without a class swap. */
+@property --focus {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+/*
+  Reduced motion: Tier 2 and Tier 3 stop entirely. Tier 1 stays, because the
+  room still has to tell the time, but it steps rather than sweeps.
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

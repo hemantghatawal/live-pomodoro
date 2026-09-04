@@ -1,6 +1,6 @@
 # Live Pomodoro - Project Progress
 
-**Current focus:** Phase 0, project scaffold
+**Current focus:** Phase 1, clock core
 **Last updated:** 2026-09-04
 
 ## Status legend
@@ -17,8 +17,8 @@
 
 | # | Phase | Status | Owner |
 |---|---|---|---|
-| 0 | Project scaffold | `[ ]` | Claude |
-| 1 | Clock core | `[ ]` | Claude |
+| 0 | Project scaffold | `[x]` | Claude |
+| 1 | Clock core | `[~]` | Claude |
 | 2 | HUD, no art | `[ ]` | Claude |
 | 3 | Art generation | `[ ]` | **Kanishk** |
 | 4 | Scene assembly | `[ ]` | Claude |
@@ -35,14 +35,14 @@ Phases 1 and 2 produce a fully working timer before any art exists. Phase 3 runs
 
 ## Phase 0 - Project scaffold
 
-- [ ] Scaffold Vite + React 19 + TypeScript, strict mode on
-- [ ] Tailwind v4 via the Vite plugin
-- [ ] Vitest configured, one passing smoke test
-- [ ] Self-host Geist and Geist Mono woff2, `@font-face` with `font-display: swap`
-- [ ] Directory structure per plan (`lib/`, `hooks/`, `components/scene/`, `components/hud/`, `worker/`)
-- [ ] Design tokens in `globals.css`, accent `#F26B21`, dark theme locked
-- [ ] `wrangler.toml` for the Durable Object, not yet wired up
-- [ ] `.gitignore`, `git init`, first commit
+- [x] Scaffold Vite + React 19 + TypeScript, strict mode on
+- [x] Tailwind v4 via the Vite plugin
+- [x] Vitest configured, one passing smoke test
+- [x] Self-host Geist and Geist Mono woff2, `@font-face` with `font-display: swap`
+- [x] Directory structure per plan (`lib/`, `hooks/`, `components/scene/`, `components/hud/`, `worker/`)
+- [x] Design tokens in `globals.css`, accent `#F26B21`, dark theme locked
+- [x] `wrangler.toml` for the Durable Object, not yet wired up
+- [x] `.gitignore`, `git init`, first commit
 
 ## Phase 1 - Clock core
 
