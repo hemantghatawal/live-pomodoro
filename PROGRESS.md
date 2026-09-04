@@ -19,7 +19,7 @@
 |---|---|---|---|
 | 0 | Project scaffold | `[x]` | Claude |
 | 1 | Clock core | `[x]` | Claude |
-| 2 | HUD, no art | `[~]` | Claude |
+| 2 | HUD, no art | `[ ]` | Claude |
 | 3 | Art generation | `[ ]` | **Kanishk** |
 | 4 | Scene assembly | `[ ]` | Claude |
 | 5 | Tier 1 stateful movement | `[ ]` | Claude |
