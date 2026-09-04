@@ -1,6 +1,6 @@
 # Live Pomodoro - Project Progress
 
-**Current focus:** Phase 9 (presence), while art is generated for Phase 3
+**Current focus:** Phase 5, movement. Art can arrive any time and slots in on its own.
 **Last updated:** 2026-09-04
 
 ## Status legend
@@ -21,7 +21,7 @@
 | 1 | Clock core | `[x]` | Claude |
 | 2 | HUD, no art | `[x]` | Claude |
 | 3 | Art generation | `[~]` | **Kanishk** |
-| 4 | Scene assembly | `[ ]` | Claude |
+| 4 | Scene assembly | `[~]` | Claude |
 | 5 | Tier 1 stateful movement | `[ ]` | Claude |
 | 6 | Lighting system | `[ ]` | Claude |
 | 7 | Tier 2 ambient loops | `[ ]` | Claude |
@@ -29,7 +29,15 @@
 | 9 | Presence, birds on the wire | `[ ]` | Claude |
 | 10 | Polish and ship | `[ ]` | Claude |
 
-Phases 1 and 2 produce a fully working timer before any art exists. Phase 3 runs in parallel with 1 and 2 and is the long pole.
+Phases 1 and 2 produce a fully working timer before any art exists. Phase 3 runs in parallel and is the long pole, but **it no longer blocks anything**: the room is built on a slot manifest, so it renders whatever art exists and skips the rest.
+
+### Adding art
+
+1. Drop exports into `art/src/`, named after their slot id (see [ART_PROMPTS.md](ART_PROMPTS.md))
+2. Run `npm run art` to key the magenta backgrounds and optimise
+3. That is all. No registration, no wiring
+
+Run `npm run dev` and the panel in the corner lists every slot and whether it is filled. A slot with no file is skipped; a pose with no file falls back to whichever pose does exist, so a single character image covers all eight until the rest arrive.
 
 ---
 
@@ -144,13 +152,18 @@ Ship-quality usable timer on a flat background.
 
 ## Phase 4 - Scene assembly
 
-- [ ] `Layer.tsx` - absolutely positioned layer, explicit dimensions, no CLS
-- [ ] `Scene.tsx` - layer stack in correct z-order
-- [ ] `Character.tsx` - pose swap as hard cut, 60ms gap, no cross-fade
-- [ ] `Cat.tsx`
-- [ ] Monitor and lamp glow wired to phase and daylight
+- [x] Slot manifest in `lib/assets.ts`, 42 slots, discovered at build time
+- [x] `Layer.tsx` - absolutely positioned layer, shared object-fit, no CLS
+- [x] `Room.tsx` - composes the stack in z order from whatever art exists
+- [x] Selection logic extracted to `lib/roomLayers.ts` and unit tested
+- [x] Variant fallback so a partial asset set still renders a character
+- [x] Deterministic format priority with a dev warning on duplicate filenames
+- [x] Dev asset panel listing filled and missing slots
+- [x] `npm run art` chroma-key pipeline, auto-detecting keyed vs full-frame
+- [x] Room tint and HUD scrim composited over the art
 - [ ] Pose preload during idle so swaps never pop a blank frame
-- [ ] Mobile collapse declared per component
+- [ ] Monitor and lamp glow wired to phase as well as daylight
+- [ ] Mobile framing check once real art exists
 
 ## Phase 5 - Tier 1 stateful movement
 

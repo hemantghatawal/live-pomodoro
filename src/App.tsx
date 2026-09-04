@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react';
 import { AmbientBackdrop } from './components/scene/AmbientBackdrop';
+import { Room } from './components/scene/Room';
 import { Controls } from './components/hud/Controls';
 import { Countdown } from './components/hud/Countdown';
 import { Wordmark } from './components/hud/Wordmark';
+import { AssetStatus } from './components/dev/AssetStatus';
 import { useCycle } from './hooks/useCycle';
 import { useDocumentTitle } from './hooks/useDocumentTitle';
 import { usePhaseTransition } from './hooks/usePhaseTransition';
@@ -59,7 +61,9 @@ export function App() {
 
   return (
     <>
+      {/* Lighting renders whether or not the room art exists yet. */}
       <AmbientBackdrop />
+      <Room cycle={cycle} daylight={cycle.daylightLevel} />
 
       <div className="mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col justify-between gap-16 px-6 py-6 sm:px-10 sm:py-8">
         <header className="flex items-start justify-between gap-6">
@@ -86,6 +90,8 @@ export function App() {
       <p aria-live="polite" className="sr-only">
         {cycle.phase === 'focus' ? 'Focus block started' : 'Break started'}
       </p>
+
+      {import.meta.env.DEV ? <AssetStatus /> : null}
     </>
   );
 }

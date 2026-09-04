@@ -27,6 +27,8 @@ export interface CycleView {
   /** Epoch ms at which the next focus block begins. */
   nextFocusAt: number;
   stop: DaylightStop;
+  /** 0 dark, 1 brightest. Drives which room variants are shown. */
+  daylightLevel: number;
   /** What he is doing on his break. Only meaningful during break. */
   activity: Activity;
   /** What he is doing at the desk. Only meaningful during focus. */
@@ -43,6 +45,7 @@ function view(now: number): CycleView {
     nextBoundaryAt: c.nextBoundary,
     nextFocusAt: nextFocusStart(now),
     stop: d.stop,
+    daylightLevel: d.level,
     activity: breakActivity(c.cycleIndex, d.stop),
     pose: focusPose(c.cycleIndex, c.progress),
   };
@@ -50,7 +53,9 @@ function view(now: number): CycleView {
 
 /** Cheap identity for "has anything a human can see changed?". */
 function key(v: CycleView): string {
-  return `${v.phase}|${v.countdown}|${v.stop}|${v.activity}|${v.pose}`;
+  // Daylight is bucketed here on purpose: it drives which variant renders, and
+  // a continuous value would re-render every frame for an invisible change.
+  return `${v.phase}|${v.countdown}|${v.stop}|${v.activity}|${v.pose}|${v.daylightLevel < 0.3 ? 'dark' : 'lit'}`;
 }
 
 export function useCycle(): CycleView {

@@ -42,8 +42,6 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-# Generated art derivatives, sources are tracked in art/src
-public/assets/generated/
 
 # Local Claude Code tooling
 .claude/
