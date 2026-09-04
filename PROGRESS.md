@@ -80,7 +80,7 @@ Ship-quality usable timer on a flat background.
 
 ## Phase 3 - Art generation `(Kanishk)`
 
-Generate the master room FIRST. Every other asset is an image-to-image edit of that exact file. Prompts are in the plan file.
+**Ready-to-paste prompts are in [ART_PROMPTS.md](ART_PROMPTS.md).** Generate the master room FIRST and get it genuinely right. Every other asset is an edit of that one file, so its quality caps the project. Assets go in `art/src/`.
 
 **Master**
 - [ ] `room-base` - empty room, flat neutral light, no character, no cat
