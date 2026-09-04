@@ -1,6 +1,6 @@
 # Live Pomodoro - Project Progress
 
-**Current focus:** Phase 1, clock core
+**Current focus:** Phase 2, HUD
 **Last updated:** 2026-09-04
 
 ## Status legend
@@ -18,8 +18,8 @@
 | # | Phase | Status | Owner |
 |---|---|---|---|
 | 0 | Project scaffold | `[x]` | Claude |
-| 1 | Clock core | `[~]` | Claude |
-| 2 | HUD, no art | `[ ]` | Claude |
+| 1 | Clock core | `[x]` | Claude |
+| 2 | HUD, no art | `[~]` | Claude |
 | 3 | Art generation | `[ ]` | **Kanishk** |
 | 4 | Scene assembly | `[ ]` | Claude |
 | 5 | Tier 1 stateful movement | `[ ]` | Claude |
@@ -48,17 +48,17 @@ Phases 1 and 2 produce a fully working timer before any art exists. Phase 3 runs
 
 No UI. Must be provably correct before anything renders.
 
-- [ ] `lib/cycle.ts` - `cycleState(now)` returning phase, remainingMs, progress, cycleIndex
-- [ ] Tests: phase boundaries at exactly 0ms, 1499999ms, 1500000ms, 1799999ms
-- [ ] Tests: UTC `:00` yields focus with exactly 25:00 remaining
-- [ ] Tests: `cycleIndex` increments once per 30 min and is stable across a cycle
-- [ ] `lib/daylight.ts` - local time to continuous 0..1 plus interpolated color stops
-- [ ] Tests: all five stops, and smooth interpolation across the 17:00 boundary
-- [ ] Tests: the 45-minute-offset edge case (Nepal `+05:45`)
-- [ ] `lib/activities.ts` - break pools gated by daylight stop, deterministic selection
-- [ ] `hooks/useCycle.ts` - rAF loop, setState only when the displayed second changes
-- [ ] rAF driver writes `--progress`, `--daylight`, `--phase` to the root element
-- [ ] Verify: no React re-render per frame (React DevTools profiler)
+- [x] `lib/cycle.ts` - `cycleState(now)` returning phase, remainingMs, progress, cycleIndex
+- [x] Tests: phase boundaries at exactly 0ms, 1499999ms, 1500000ms, 1799999ms
+- [x] Tests: UTC `:00` yields focus with exactly 25:00 remaining
+- [x] Tests: `cycleIndex` increments once per 30 min and is stable across a cycle
+- [x] `lib/daylight.ts` - local time to continuous 0..1 plus interpolated color stops
+- [x] Tests: all five stops, and smooth interpolation across the 17:00 boundary
+- [x] Tests: the 45-minute-offset edge case (Nepal `+05:45`)
+- [x] `lib/activities.ts` - break pools gated by daylight stop, deterministic selection
+- [x] `hooks/useCycle.ts` - rAF loop, setState only when the displayed second changes
+- [x] rAF driver writes `--progress`, `--daylight`, `--phase` to the root element
+- [x] Verify: no React re-render per frame (React DevTools profiler)
 
 ## Phase 2 - HUD, no art
 

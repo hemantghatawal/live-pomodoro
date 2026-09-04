@@ -50,3 +50,16 @@
     transition-duration: 0.001ms !important;
   }
 }
+
+/*
+  Derived from --progress by CSS, not by JavaScript. The rAF loop writes one
+  number and these follow, which keeps the per-frame work to a single property.
+*/
+:root {
+  /* The window beam sweeps across the room over the block. The room is the progress bar. */
+  --shaft-x: calc(var(--progress) * 100%);
+  /* A mechanical kitchen timer winds down, so the dial runs back toward zero. */
+  --dial-deg: calc((1 - var(--progress)) * 360deg);
+  /* Composed room wash, driven by local time. */
+  --tint: rgb(var(--tint-r) var(--tint-g) var(--tint-b) / var(--tint-a));
+}
