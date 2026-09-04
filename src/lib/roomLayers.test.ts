@@ -8,6 +8,7 @@ const BASE: RoomState = {
   activity: 'at-window',
   cycleIndex: 0,
   daylight: 1,
+  screen: 'a',
 };
 
 const only =
@@ -69,9 +70,9 @@ describe('variant selection', () => {
     expect(preferredVariants({ ...BASE, daylight: 1 }).cat).toBe('cat-sitting');
   });
 
-  it('rotates the monitor content by cycle', () => {
+  it('maps the resolved screen frame onto its slot', () => {
     const seen = new Set(
-      [0, 1, 2].map((i) => preferredVariants({ ...BASE, cycleIndex: i }).screen),
+      (['a', 'b', 'c'] as const).map((f) => preferredVariants({ ...BASE, screen: f }).screen),
     );
     expect(seen).toEqual(new Set(['screen-a', 'screen-b', 'screen-c']));
   });

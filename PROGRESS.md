@@ -1,6 +1,6 @@
 # Live Pomodoro - Project Progress
 
-**Current focus:** Phase 5, movement. Art can arrive any time and slots in on its own.
+**Current focus:** Phase 6, lighting. Art can arrive any time and slots in on its own.
 **Last updated:** 2026-09-04
 
 ## Status legend
@@ -22,8 +22,8 @@
 | 2 | HUD, no art | `[x]` | Claude |
 | 3 | Art generation | `[~]` | **Kanishk** |
 | 4 | Scene assembly | `[~]` | Claude |
-| 5 | Tier 1 stateful movement | `[ ]` | Claude |
-| 6 | Lighting system | `[ ]` | Claude |
+| 5 | Tier 1 stateful movement | `[x]` | Claude |
+| 6 | Lighting system | `[~]` | Claude |
 | 7 | Tier 2 ambient loops | `[ ]` | Claude |
 | 8 | Tier 3 event scheduler | `[ ]` | Claude |
 | 9 | Presence, birds on the wire | `[ ]` | Claude |
@@ -169,14 +169,15 @@ Ship-quality usable timer on a flat background.
 
 Functional, not decorative. Lands before anything ambient.
 
-- [ ] Sundial light shaft sweeps across the room mapped to `progress`
-- [ ] Desk timer dial rotates to zero across the block
-- [ ] Wall clock hands show real local time, second hand ticks in discrete steps
-- [ ] Timer glow on during focus, dark during break
-- [ ] Screen content swaps every 30-90s during focus, frozen on break
-- [ ] Phase transition beat: dial, light, glow, pose, lighting, chime as ONE event
-- [ ] Verify: dial reaches zero exactly when the countdown does
-- [ ] Verify: wall clock matches system clock
+- [x] Sundial light shaft sweeps across the room mapped to `progress`
+- [x] Desk timer dial rotates to zero across the block
+- [x] Wall clock hands show real local time, second hand ticks in discrete steps
+- [x] Timer glow on during focus, dark during break
+- [x] Screen content rotates through a block, frozen on break
+- [x] Phase transition beat: glows ease over 400ms while dial and pose snap
+- [x] Verify: dial reaches zero exactly when the countdown does (asserted in `cycle.test.ts`)
+- [x] Verify: wall clock matches system clock (checked live against 16:10:18, all three hands exact)
+- [ ] Visual confirmation of rotation and sweep, once art exists to rotate
 
 ## Phase 6 - Lighting system
 

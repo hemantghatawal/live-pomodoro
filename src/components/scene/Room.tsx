@@ -1,6 +1,7 @@
 import { Layer } from './Layer';
 import { SLOTS_BY_Z, assetUrl, hasAsset } from '../../lib/assets';
 import { chooseLayers } from '../../lib/roomLayers';
+import { LAYER_STYLE } from '../../lib/layerStyles';
 import type { CycleView } from '../../hooks/useCycle';
 
 /**
@@ -25,6 +26,7 @@ export function Room({ cycle, daylight }: Props) {
     activity: cycle.activity,
     cycleIndex: cycle.cycleIndex,
     daylight,
+    screen: cycle.screen,
   });
   if (layers.length === 0) return null;
 
@@ -33,7 +35,15 @@ export function Room({ cycle, daylight }: Props) {
       {layers.map((slot) => {
         const src = assetUrl(slot.id);
         if (!src) return null;
-        return <Layer key={slot.id} src={src} z={slot.z} blend={slot.blend} />;
+        return (
+          <Layer
+            key={slot.id}
+            src={src}
+            z={slot.z}
+            blend={slot.blend}
+            style={LAYER_STYLE[slot.id]}
+          />
+        );
       })}
 
       {/* Room lighting, applied over the flat art rather than baked into it. */}

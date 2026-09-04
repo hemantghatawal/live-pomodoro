@@ -17,6 +17,8 @@ export interface RoomState {
   cycleIndex: number;
   /** 0..1 */
   daylight: number;
+  /** Which monitor image is up. Resolved upstream so progress stays out of React. */
+  screen: 'a' | 'b' | 'c';
 }
 
 /** Which variant each group would ideally show. */
@@ -26,7 +28,7 @@ export function preferredVariants(s: RoomState): Record<string, string> {
     // Focus poses and break activities share the pose- prefix by design.
     pose: s.phase === 'focus' ? `pose-${s.pose}` : `pose-${s.activity}`,
     cat: s.daylight < 0.25 ? 'cat-asleep-on-desk' : 'cat-sitting',
-    screen: `screen-${['a', 'b', 'c'][s.cycleIndex % 3]}`,
+    screen: `screen-${s.screen}`,
     phone: 'phone',
   };
 }

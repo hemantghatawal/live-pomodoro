@@ -63,3 +63,10 @@
   /* Composed room wash, driven by local time. */
   --tint: rgb(var(--tint-r) var(--tint-g) var(--tint-b) / var(--tint-a));
 }
+
+/* Steady, unlike everything else, which is why it works as a baseline. */
+@keyframes fan-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

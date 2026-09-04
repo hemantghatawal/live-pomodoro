@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import {
   breakActivity,
   focusPose,
+  screenFrame,
   type Activity,
   type FocusPose,
 } from '../lib/activities';
+import { handAngles } from '../lib/clockHands';
 import { cycleState, formatCountdown, nextFocusStart, type Phase } from '../lib/cycle';
 import { daylight, type DaylightStop } from '../lib/daylight';
 
@@ -33,6 +35,8 @@ export interface CycleView {
   activity: Activity;
   /** What he is doing at the desk. Only meaningful during focus. */
   pose: FocusPose;
+  /** Which monitor image is up. Rotates through a block, frozen on break. */
+  screen: 'a' | 'b' | 'c';
 }
 
 function view(now: number): CycleView {
@@ -48,6 +52,7 @@ function view(now: number): CycleView {
     daylightLevel: d.level,
     activity: breakActivity(c.cycleIndex, d.stop),
     pose: focusPose(c.cycleIndex, c.progress),
+    screen: screenFrame(c.cycleIndex, c.phase, c.progress),
   };
 }
 
@@ -55,7 +60,7 @@ function view(now: number): CycleView {
 function key(v: CycleView): string {
   // Daylight is bucketed here on purpose: it drives which variant renders, and
   // a continuous value would re-render every frame for an invisible change.
-  return `${v.phase}|${v.countdown}|${v.stop}|${v.activity}|${v.pose}|${v.daylightLevel < 0.3 ? 'dark' : 'lit'}`;
+  return `${v.phase}|${v.countdown}|${v.stop}|${v.activity}|${v.pose}|${v.screen}|${v.daylightLevel < 0.3 ? 'dark' : 'lit'}`;
 }
 
 export function useCycle(): CycleView {
@@ -95,6 +100,13 @@ export function useCycle(): CycleView {
       put('--tint-g', d.tint.g, 0.5);
       put('--tint-b', d.tint.b, 0.5);
       put('--tint-a', d.tint.a, 0.002);
+
+      // Wall clock, on the visitor's real local time. Degrees are written
+      // unitless and given their unit in CSS, so every write is numeric.
+      const hands = handAngles(new Date(now));
+      put('--clock-second', hands.second, 1);
+      put('--clock-minute', hands.minute, 0.05);
+      put('--clock-hour', hands.hour, 0.05);
 
       const next = view(now);
       const nextKey = key(next);

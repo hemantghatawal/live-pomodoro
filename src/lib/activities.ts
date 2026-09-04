@@ -56,3 +56,25 @@ export function focusPose(cycleIndex: number, progress: number): FocusPose {
 export function activityPool(stop: DaylightStop): readonly Activity[] {
   return POOLS[stop];
 }
+
+/** Roughly how often the monitors change during a focus block. */
+const SCREEN_SEGMENT_MS = 45_000;
+const FOCUS_MS_LOCAL = 25 * 60 * 1000;
+
+/**
+ * Which monitor image to show. Rotates through the block so the work visibly
+ * changes, and freezes during a break because he is not at the desk.
+ */
+export function screenFrame(
+  cycleIndex: number,
+  phase: 'focus' | 'break',
+  progress: number,
+): 'a' | 'b' | 'c' {
+  const segments = Math.floor(FOCUS_MS_LOCAL / SCREEN_SEGMENT_MS);
+  const segment =
+    phase === 'break'
+      ? segments - 1 // hold whatever was last on screen
+      : Math.min(segments - 1, Math.floor(Math.max(0, progress) * segments));
+  const pick = Math.floor(hash2(cycleIndex + 7919, segment) * 3);
+  return (['a', 'b', 'c'] as const)[Math.min(2, pick)]!;
+}

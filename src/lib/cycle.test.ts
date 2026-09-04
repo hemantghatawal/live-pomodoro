@@ -158,6 +158,26 @@ describe('nextFocusStart', () => {
   });
 });
 
+describe('the room agrees with the countdown', () => {
+  // The timer dial is rendered as (1 - progress) turns, so progress reaching 1
+  // and the countdown reaching zero have to be the same instant.
+  const dialDegrees = (progress: number) => (1 - progress) * 360;
+
+  it('winds the dial to zero exactly as the block ends', () => {
+    const end = cycleState(NOON + FOCUS_MS - 1);
+    expect(dialDegrees(end.progress)).toBeLessThan(0.001);
+    expect(formatCountdown(end.remainingMs)).toBe('00:01');
+  });
+
+  it('starts the dial at a full turn', () => {
+    expect(dialDegrees(cycleState(NOON).progress)).toBe(360);
+  });
+
+  it('has the dial half wound at half time', () => {
+    expect(dialDegrees(cycleState(NOON + FOCUS_MS / 2).progress)).toBeCloseTo(180, 6);
+  });
+});
+
 describe('pre-epoch safety', () => {
   it('does not return negative remaining time before 1970', () => {
     const s = cycleState(-CYCLE_MS * 3 - 5_000);
