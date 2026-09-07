@@ -7,6 +7,7 @@ import {
   Leaf,
 } from '@phosphor-icons/react';
 import type { ComponentType } from 'react';
+import type { NotifyState } from '../../lib/notify';
 
 interface ToggleProps {
   on: boolean;
@@ -27,6 +28,7 @@ function Toggle({ on, disabled, label, hint, OnIcon, OffIcon, onClick }: ToggleP
       disabled={disabled}
       aria-pressed={on}
       title={hint ?? label}
+      aria-description={hint}
       className={[
         'inline-flex items-center gap-2 rounded-control border px-3 py-2',
         'text-[13px] transition-colors',
@@ -45,7 +47,7 @@ function Toggle({ on, disabled, label, hint, OnIcon, OffIcon, onClick }: ToggleP
 
 interface Props {
   notify: boolean;
-  notifyDenied: boolean;
+  notifyPermission: NotifyState;
   sound: boolean;
   awake: boolean;
   calm: boolean;
@@ -59,16 +61,18 @@ interface Props {
 export function Controls(p: Props) {
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
-      <Toggle on={p.calm} label="Calm" hint="Pause character animation"
+      <Toggle on={p.calm} label="Calm" hint="Pause character movement and hide thought bubbles. The timer keeps running."
         OnIcon={Leaf} OffIcon={Leaf} onClick={p.onCalm} />
       <Toggle
         on={p.notify}
-        disabled={p.notifyDenied}
+        disabled={p.notifyPermission === 'denied' || p.notifyPermission === 'unsupported'}
         label="Notify"
         hint={
-          p.notifyDenied
-            ? 'Notifications are blocked for this site in your browser settings'
-            : 'Notify me when the phase changes'
+          p.notifyPermission === 'unsupported'
+            ? 'This browser does not support desktop notifications. Try opening the room in a supported browser.'
+            : p.notifyPermission === 'denied'
+              ? 'Notifications are blocked for this site. Allow them in your browser settings to enable alerts.'
+              : 'Show a desktop notification when focus or break starts. Requires browser permission and an open page.'
         }
         OnIcon={Bell}
         OffIcon={BellSlash}
@@ -77,7 +81,7 @@ export function Controls(p: Props) {
       <Toggle
         on={p.sound}
         label="Sound"
-        hint="Play a chime when the phase changes"
+        hint="Play a short chime when focus or break starts. Plays a sample when turned on."
         OnIcon={SpeakerSimpleHigh}
         OffIcon={SpeakerSimpleSlash}
         onClick={p.onSound}
@@ -86,7 +90,7 @@ export function Controls(p: Props) {
         <Toggle
           on={p.awake}
           label="Keep awake"
-          hint="Stop the screen sleeping while the room is on display"
+          hint="Ask the browser to keep your screen awake while this page is visible. Battery-saving settings may override this."
           OnIcon={Sun}
           OffIcon={Sun}
           onClick={p.onAwake}

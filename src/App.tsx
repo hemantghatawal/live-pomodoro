@@ -71,7 +71,7 @@ export function App() {
           <Wordmark />
           <Controls
             notify={prefs.notify}
-            notifyDenied={permission === 'denied' || permission === 'unsupported'}
+            notifyPermission={permission}
             sound={prefs.sound}
             awake={prefs.awake}
             calm={prefs.calm}

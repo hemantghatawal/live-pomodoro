@@ -1,6 +1,6 @@
 # Live Pomodoro - Project Progress
 
-**Current focus:** First animated room slice integrated: approved base, registered four-frame developer sheet, monitor occlusion, local-time tint, and Calm. Remaining props, activities and presence are not implemented yet.
+**Current focus:** Animated room with two registered developer sheets, opening break stretch, relaxed head turns, occasional idea/fact thought bubbles, monitor occlusion, local-time tint, and Calm. Remaining props, travelling activities and presence are not implemented yet.
 **Last updated:** 2026-09-07
 
 See [the current sprite workflow](art/SPRITE_WORKFLOW.md) for the approved camera, exact asset pipeline, validation, and revised scope. Earlier checklist entries remain a historical backlog; the four-frame sheet replaces the initial separate typing/blink assets.
@@ -99,6 +99,9 @@ Ship-quality usable timer on a flat background.
 - [x] Exact monitor foreground clipping, responsive shared canvas, and browser occlusion check
 - [x] Calm control, reduced-motion handling, and hidden-tab sprite pause
 - [x] Occasional small smile during focus, reusing the approved resting sprite for 2.4 seconds every 97 seconds
+- [x] Four additional break movement sprites, timed arm raise/stretch/lower and left/right glances
+- [x] Every break begins with the approved seated stretch; old camera-specific activity pool replaced
+- [x] Sparse break-only thought bubbles alternating product ideas and app facts
 - [x] Dev-only day/night and work/rest preview; live countdown remains authoritative
 
 **Core layers**

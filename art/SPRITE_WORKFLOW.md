@@ -29,7 +29,17 @@ Master: `src/room-base.png`, copied unchanged from `previews/room-base-opposite-
 
 The window is behind the camera. Keep this approved composition. For a future connected presence feature, use a small honest text count near the phase label; hide it when unavailable. Birds, exterior city layers, visible screen contents and wall-clock sprites are deferred for this camera. Do not fabricate presence or add a new window just to preserve the old plan.
 
-The first slice does not yet animate the fan, plant, cat, or desk timer. Additional break activities and the presence backend remain future work. The seated rest cell is the explicit fallback for every break activity until its own sprites exist.
+The room does not yet animate the fan, plant, cat, or desk timer. Travelling poses and the presence backend remain future work.
+
+## Break animation update
+
+`developer-break-sprites.png` adds four movement cells: hands raised beside ears, hands-behind-head stretch, look left, look right. Every break starts by raising arms, stretching, then lowering them. The sequence includes long resting gaps, repeats gentle movement bouts, and settles for the final seven seconds before focus. All production timing derives from absolute clock time. Supported activities are now stretching, lean-back and look-around; the previous window/cat/bed/coffee activity pool is no longer scheduled.
+
+Break sheet alignment uses the waist center horizontally, so wide elbows do not shift the torso. Source pixels are keyed and registered by `npm run art`. The built-in image generation prompt is saved in `previews/developer-break-sprites-prompt.md`.
+
+Four 12-second thought bubbles appear during a break, starting at seconds 16, 86, 156 and 226. They alternate original product ideas and facts directly grounded in the app's clock/lighting behavior. No claims of market demand or health benefits. Calm hides the thoughts. They are readable to assistive technology but do not interrupt with live announcements.
+
+The development panel can play a break from its beginning without changing the actual timer, or hold individual movement frames for visual inspection. Closing the panel restores the live room.
 
 ## Validation
 

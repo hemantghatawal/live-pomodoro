@@ -18,12 +18,13 @@ export function breakFrame(now: number, activity: Activity, still = false): Brea
   // Settle before the return to work. Short actions are separated by long rests.
   if (elapsed >= BREAK_MS - 7000) return REST;
   const beat = elapsed % 70000;
-  const start = activity === 'look-around' ? 30000 : 600;
+  // Every break opens with the approved stretch, irrespective of activity pool.
+  const start = 600;
   const hold = activity === 'lean-back' ? 8500 : 4500;
   if (beat >= start && beat < start + 700) return pose(0, 'raise-arms');
   if (beat >= start + 700 && beat < start + 700 + hold) return pose(1, 'stretch');
   if (beat >= start + 700 + hold && beat < start + 1400 + hold) return pose(0, 'raise-arms');
-  const glance = activity === 'look-around' ? 1000 : 23000;
+  const glance = activity === 'look-around' ? 18000 : 23000;
   if (beat >= glance && beat < glance + 2600) return pose(2, 'look-left');
   if (beat >= glance + 4600 && beat < glance + 7200) return pose(3, 'look-right');
   return REST;

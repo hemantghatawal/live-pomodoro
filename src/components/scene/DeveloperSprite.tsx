@@ -58,6 +58,6 @@ export function DeveloperSprite({ phase, calm, activity, inspectFrame = -1, prev
   }, [phase, calm, src, breakSrc, activity, inspectFrame, previewPlaying]);
 
   if (!src) return null;
-  return <div ref={ref} className="developer-sprite" data-phase={phase}
+  return <div ref={ref} aria-hidden className="developer-sprite" data-phase={phase}
     style={{ backgroundImage: `url("${src}")` }} />;
 }

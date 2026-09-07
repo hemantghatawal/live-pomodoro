@@ -7,6 +7,7 @@ import { DeveloperSprite } from './DeveloperSprite';
 import { daylightAt, tintCss } from '../../lib/daylight';
 import type { CSSProperties } from 'react';
 import type { ScenePreview } from '../dev/AssetStatus';
+import { BreakThought } from './BreakThought';
 
 /**
  * Composes the room from whatever art exists.
@@ -41,7 +42,7 @@ export function Room({ cycle, daylight, calm = false, preview = 'live' }: Props)
   if (layers.length === 0) return null;
 
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
       <div className="room-stage" style={light ? {
         '--tint': tintCss(light.tint), '--lamp': light.lamp,
       } as CSSProperties : undefined}>
@@ -71,6 +72,8 @@ export function Room({ cycle, daylight, calm = false, preview = 'live' }: Props)
         style={{ zIndex: 92, background: 'var(--tint)', mixBlendMode: 'multiply' }}
       />
       <div className="room-lamp-light" />
+      <BreakThought phase={inspectFrame >= 0 ? 'focus' : phase} calm={calm}
+        previewPlaying={inspecting && preview.endsWith('break')} inspect={inspecting ? preview : ''} />
       </div>
       {/* Keeps the HUD legible whatever the room is doing behind it. */}
       <div

@@ -7,6 +7,10 @@ const activities: Activity[] = ['stretching', 'lean-back', 'look-around'];
 
 describe('break movement sequence', () => {
   it('raises arms before stretching, lowers them, and rests', () => {
+    for (const activity of activities) {
+      expect(breakFrame(FOCUS_MS + 600, activity).action).toBe('raise-arms');
+      expect(breakFrame(FOCUS_MS + 1300, activity).action).toBe('stretch');
+    }
     const action = (ms: number) => breakFrame(FOCUS_MS + ms, 'stretching').action;
     expect(action(0)).toBe('rest');
     expect(action(600)).toBe('raise-arms');
