@@ -9,7 +9,11 @@ import { slotStatus, type SlotCategory } from '../../lib/assets';
 
 const ORDER: SlotCategory[] = ['room', 'character', 'cat', 'prop', 'screen', 'light', 'view', 'presence'];
 
-export function AssetStatus() {
+export type ScenePreview = 'live' | 'day-focus' | 'night-focus' | 'day-break' | 'night-break';
+
+export function AssetStatus({ preview, onPreview }: {
+  preview: ScenePreview; onPreview: (value: ScenePreview) => void;
+}) {
   const [open, setOpen] = useState(false);
   const all = slotStatus();
   const filled = all.filter((s) => s.present).length;
@@ -18,7 +22,7 @@ export function AssetStatus() {
     <div className="fixed bottom-4 right-4 z-50 max-w-[min(20rem,calc(100vw-2rem))] font-mono text-[11px]">
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => { if (open) onPreview('live'); setOpen((o) => !o); }}
         className="w-full rounded-panel border border-zinc-800 bg-zinc-950/90 px-3 py-2 text-left text-zinc-300 backdrop-blur hover:border-zinc-700"
       >
         art {filled}/{all.length}
@@ -27,6 +31,17 @@ export function AssetStatus() {
 
       {open ? (
         <div className="mt-2 max-h-[60vh] overflow-y-auto rounded-panel border border-zinc-800 bg-zinc-950/95 p-3 backdrop-blur">
+          <label className="mb-4 block text-zinc-300">
+            Room preview (timer stays live)
+            <select className="mt-2 block w-full rounded border border-zinc-700 bg-zinc-900 p-2"
+              value={preview} onChange={(e) => onPreview(e.target.value as ScenePreview)}>
+              <option value="live">Live local light and phase</option>
+              <option value="day-focus">Day / focus</option>
+              <option value="night-focus">Night / focus</option>
+              <option value="day-break">Day / break</option>
+              <option value="night-break">Night / break</option>
+            </select>
+          </label>
           {ORDER.map((category) => {
             const rows = all.filter((s) => s.slot.category === category);
             if (rows.length === 0) return null;

@@ -25,6 +25,9 @@ describe('an empty asset set', () => {
 });
 
 describe('a minimal asset set', () => {
+  it('does not paint a sprite sheet as a room-sized image', () => {
+    expect(ids(chooseLayers(SLOTS, only('room-base', 'developer-sprites'), BASE))).toEqual(['room-base']);
+  });
   it('renders just the room when only the room exists', () => {
     expect(ids(chooseLayers(SLOTS, only('room-base'), BASE))).toEqual(['room-base']);
   });

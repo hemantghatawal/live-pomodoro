@@ -55,6 +55,7 @@ export function chooseLayers(
   return slots
     .filter((slot) => {
       if (!has(slot.id)) return false;
+      if (slot.spriteSheet) return false;
       if (!slot.variantOf) return true;
       return chosen.get(slot.variantOf) === slot.id;
     })

@@ -9,12 +9,14 @@ export interface Preferences {
   notify: boolean;
   sound: boolean;
   awake: boolean;
+  calm: boolean;
 }
 
 export const DEFAULT_PREFERENCES: Preferences = {
   notify: false,
   sound: false,
   awake: false,
+  calm: false,
 };
 
 const KEY = 'live-pomodoro:preferences';
@@ -30,6 +32,7 @@ export function loadPreferences(): Preferences {
       notify: typeof p.notify === 'boolean' ? p.notify : DEFAULT_PREFERENCES.notify,
       sound: typeof p.sound === 'boolean' ? p.sound : DEFAULT_PREFERENCES.sound,
       awake: typeof p.awake === 'boolean' ? p.awake : DEFAULT_PREFERENCES.awake,
+      calm: typeof p.calm === 'boolean' ? p.calm : DEFAULT_PREFERENCES.calm,
     };
   } catch {
     return DEFAULT_PREFERENCES;

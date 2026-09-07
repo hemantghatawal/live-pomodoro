@@ -1,5 +1,7 @@
 # Live Pomodoro - Build Plan
 
+> **Current implementation, 2026-09-07:** The user approved a reverse camera behind the monitors and the cartoon master in `art/src/room-base.png`. A four-frame character sheet now supplies working, blinking, alternate typing and seated rest. See [the authoritative sprite workflow](art/SPRITE_WORKFLOW.md). Older side-on, visible-window and 35-asset assumptions below are superseded. Presence will use an honest text count when its backend is built; the approved room stays intact.
+
 ## Context
 
 There are thousands of pomodoro timers and every one of them makes you press Start. The friction is not the timer, it is the activation energy and the loneliness of focusing alone.

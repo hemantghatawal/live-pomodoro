@@ -1,7 +1,9 @@
 # Live Pomodoro - Project Progress
 
-**Current focus:** Phase 6, lighting. Art can arrive any time and slots in on its own.
-**Last updated:** 2026-09-04
+**Current focus:** First animated room slice integrated: approved base, registered four-frame developer sheet, monitor occlusion, local-time tint, and Calm. Remaining props, activities and presence are not implemented yet.
+**Last updated:** 2026-09-07
+
+See [the current sprite workflow](art/SPRITE_WORKFLOW.md) for the approved camera, exact asset pipeline, validation, and revised scope. Earlier checklist entries remain a historical backlog; the four-frame sheet replaces the initial separate typing/blink assets.
 
 ## Status legend
 
@@ -92,7 +94,12 @@ Ship-quality usable timer on a flat background.
 **Ready-to-paste prompts are in [ART_PROMPTS.md](ART_PROMPTS.md).** Generate the master room FIRST and get it genuinely right. Every other asset is an edit of that one file, so its quality caps the project. Assets go in `art/src/`.
 
 **Master**
-- [ ] `room-base` - empty room, flat neutral light, no character, no cat
+- [x] `room-base` - approved opposite-side cartoon room, no character or cat; installed as optimized WebP
+- [x] `developer-sprites` - registered 2x2 sheet: working, blink, alternate typing, seated rest
+- [x] Exact monitor foreground clipping, responsive shared canvas, and browser occlusion check
+- [x] Calm control, reduced-motion handling, and hidden-tab sprite pause
+- [x] Occasional small smile during focus, reusing the approved resting sprite for 2.4 seconds every 97 seconds
+- [x] Dev-only day/night and work/rest preview; live countdown remains authoritative
 
 **Core layers**
 - [ ] `view-day`

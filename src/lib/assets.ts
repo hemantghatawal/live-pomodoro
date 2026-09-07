@@ -24,6 +24,8 @@ export interface Slot {
   blend?: Blend;
   /** Slots that are alternatives to each other, only one shows at a time. */
   variantOf?: string;
+  /** A sheet is consumed by its sprite player, never drawn as a full-room layer. */
+  spriteSheet?: boolean;
 }
 
 export const SLOTS: readonly Slot[] = [
@@ -61,6 +63,7 @@ export const SLOTS: readonly Slot[] = [
   { id: 'car', label: 'Car headlights', category: 'prop', z: 15 },
 
   // Living things
+  { id: 'developer-sprites', label: 'Developer, four frames', category: 'character', z: 70, spriteSheet: true },
   { id: 'cat-sitting', label: 'Cat sitting', category: 'cat', z: 60, variantOf: 'cat' },
   { id: 'cat-walking', label: 'Cat walking', category: 'cat', z: 60, variantOf: 'cat' },
   { id: 'cat-asleep-on-desk', label: 'Cat asleep', category: 'cat', z: 60, variantOf: 'cat' },

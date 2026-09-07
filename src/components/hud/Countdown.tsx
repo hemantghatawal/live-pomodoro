@@ -16,7 +16,7 @@ export function Countdown({ countdown, phase, nextLabel }: Props) {
 
       <p
         className="tnum font-mono font-medium leading-[0.85] text-zinc-100"
-        style={{ fontSize: 'clamp(4.5rem, 17vw, 13rem)' }}
+        style={{ fontSize: 'clamp(4rem, 8vw, 7rem)' }}
       >
         {countdown}
       </p>

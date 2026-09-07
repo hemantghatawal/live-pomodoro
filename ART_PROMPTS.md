@@ -1,5 +1,7 @@
 # Art Prompt Pack
 
+> **2026-09-07 update:** The approved camera is now behind the monitors, looking toward the developer's face. Use [the current sprite workflow](art/SPRITE_WORKFLOW.md) and the approved master in `art/src/room-base.png`. The side-on prompts and asset list below are historical planning references, not production instructions. The initial four-frame developer sheet is now generated and installed.
+
 Everything needed to generate the 35 assets in Phase 3. Read "Rules" once, then work down the list.
 
 ---

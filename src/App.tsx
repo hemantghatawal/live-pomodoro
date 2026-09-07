@@ -4,7 +4,7 @@ import { Room } from './components/scene/Room';
 import { Controls } from './components/hud/Controls';
 import { Countdown } from './components/hud/Countdown';
 import { Wordmark } from './components/hud/Wordmark';
-import { AssetStatus } from './components/dev/AssetStatus';
+import { AssetStatus, type ScenePreview } from './components/dev/AssetStatus';
 import { useCycle } from './hooks/useCycle';
 import { useDocumentTitle } from './hooks/useDocumentTitle';
 import { usePhaseTransition } from './hooks/usePhaseTransition';
@@ -20,6 +20,7 @@ export function App() {
   const cycle = useCycle();
   const { prefs, set } = usePreferences();
   const [permission, setPermission] = useState(notifyState);
+  const [preview, setPreview] = useState<ScenePreview>('live');
   const { supported: wakeLockSupported } = useWakeLock(prefs.awake);
 
   useDocumentTitle(cycle.countdown, cycle.phase);
@@ -63,7 +64,7 @@ export function App() {
     <>
       {/* Lighting renders whether or not the room art exists yet. */}
       <AmbientBackdrop />
-      <Room cycle={cycle} daylight={cycle.daylightLevel} />
+      <Room cycle={cycle} daylight={cycle.daylightLevel} calm={prefs.calm} preview={preview} />
 
       <div className="mx-auto flex min-h-[100dvh] max-w-[1400px] flex-col justify-between gap-16 px-6 py-6 sm:px-10 sm:py-8">
         <header className="flex items-start justify-between gap-6">
@@ -73,6 +74,8 @@ export function App() {
             notifyDenied={permission === 'denied' || permission === 'unsupported'}
             sound={prefs.sound}
             awake={prefs.awake}
+            calm={prefs.calm}
+            onCalm={() => set('calm', !prefs.calm)}
             wakeLockSupported={wakeLockSupported}
             onNotify={onNotify}
             onSound={onSound}
@@ -91,7 +94,7 @@ export function App() {
         {cycle.phase === 'focus' ? 'Focus block started' : 'Break started'}
       </p>
 
-      {import.meta.env.DEV ? <AssetStatus /> : null}
+      {import.meta.env.DEV ? <AssetStatus preview={preview} onPreview={setPreview} /> : null}
     </>
   );
 }

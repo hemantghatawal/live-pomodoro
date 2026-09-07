@@ -72,9 +72,37 @@ function key(data, width, height, channels) {
     out[o + 2] = b;
     // Soften the halo the model leaves where the subject meets the backdrop.
     const halo = (r + b) / 2 - g;
-    out[o + 3] = halo > TOLERANCE ? Math.max(0, 255 - (halo - TOLERANCE) * 4) : 255;
+    const sourceAlpha = channels === 4 ? data[i + 3] : 255;
+    out[o + 3] = Math.min(sourceAlpha, halo > TOLERANCE ? Math.max(0, 255 - (halo - TOLERANCE) * 4) : 255);
   }
   return out;
+}
+
+/** Register generated sprite cells without rescaling the character between frames. */
+async function registerSprites(pipeline, width, height) {
+  if (width !== 1536 || height !== 1024) throw new Error('Developer sheet must be 1536x1024 (2x2 cells).');
+  const rgba = await pipeline.ensureAlpha().raw().toBuffer();
+  const cells = [];
+  for (let frame = 0; frame < 4; frame++) {
+    const left = (frame % 2) * 768;
+    const top = Math.floor(frame / 2) * 512;
+    let minX = 768, maxX = -1, minY = 512, maxY = -1;
+    for (let y = 0; y < 512; y++) for (let x = 0; x < 768; x++) {
+      if (rgba[((top + y) * width + left + x) * 4 + 3] < 128) continue;
+      minX = Math.min(minX, x); maxX = Math.max(maxX, x);
+      minY = Math.min(minY, y); maxY = Math.max(maxY, y);
+    }
+    if (maxX < 0 || maxY - minY > 470 || minX === 0 || maxX === 767) {
+      throw new Error(`Sprite ${frame}: missing alpha or artwork touches a cell edge.`);
+    }
+    const w = maxX - minX + 1;
+    const h = maxY - minY + 1;
+    const input = await sharp(rgba, { raw: { width, height, channels: 4 } })
+      .extract({ left: left + minX, top: top + minY, width: w, height: h }).png().toBuffer();
+    cells.push({ input, left: left + Math.round((768 - w) / 2), top: top + 40 });
+    console.log(`  sprite ${frame}: ${w}x${h}, registered at head y=40, centre x=384`);
+  }
+  return sharp({ create: { width, height, channels: 4, background: '#00000000' } }).composite(cells);
 }
 
 const files = await readdir(SRC).catch(() => {
@@ -103,9 +131,11 @@ for (const file of images) {
   const { width, height, channels } = info;
   const keyed = edgeIsMagenta(data, width, height, channels);
 
-  const pipeline = keyed
+  let pipeline = keyed
     ? sharp(key(data, width, height, channels), { raw: { width, height, channels: 4 } })
     : sharp(src);
+
+  if (id === 'developer-sprites') pipeline = await registerSprites(pipeline, width, height);
 
   const { size } = await pipeline.webp({ quality: 90, effort: 5 }).toFile(dest);
 

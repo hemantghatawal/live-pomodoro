@@ -70,3 +70,47 @@
     transform: rotate(360deg);
   }
 }
+
+/* A single 1536x1024 coordinate space for art, sprites and occlusion. */
+.room-stage {
+  position: absolute;
+  width: max(100vw, 150dvh);
+  height: max(100dvh, 66.666667vw);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  isolation: isolate;
+}
+
+.developer-sprite {
+  position: absolute;
+  z-index: 70;
+  left: 28.7%;
+  top: 32.3%;
+  width: 37.5%;
+  aspect-ratio: 3 / 2;
+  background-size: 200% 200%;
+  background-repeat: no-repeat;
+  animation: character-breathe 5.7s ease-in-out infinite;
+}
+
+.developer-sprite[data-still="true"] { animation: none; }
+
+/* Original room pixels, clipped along the upper monitor edges, never redrawn. */
+.room-foreground {
+  clip-path: polygon(0% 100%, 0% 94%, 29.3% 94%, 29.3% 62.3%, 47.5% 66.2%, 68.5% 63.6%, 68.5% 100%);
+}
+
+.room-lamp-light {
+  position: absolute;
+  inset: 0;
+  z-index: 92;
+  background: radial-gradient(ellipse 21% 24% at 29% 75%, rgb(255 180 78 / 0.34), transparent 75%);
+  mix-blend-mode: screen;
+  opacity: var(--lamp, 0);
+}
+
+@keyframes character-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.35%); }
+}

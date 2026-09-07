@@ -4,6 +4,7 @@ import {
   SpeakerSimpleHigh,
   SpeakerSimpleSlash,
   Sun,
+  Leaf,
 } from '@phosphor-icons/react';
 import type { ComponentType } from 'react';
 
@@ -32,7 +33,7 @@ function Toggle({ on, disabled, label, hint, OnIcon, OffIcon, onClick }: ToggleP
         'disabled:cursor-not-allowed disabled:opacity-40',
         on
           ? 'border-ember/40 bg-ember/10 text-ember'
-          : 'border-zinc-800 bg-zinc-900/40 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200',
+          : 'border-zinc-700 bg-zinc-950/85 text-zinc-300 hover:border-zinc-500 hover:text-zinc-100',
       ].join(' ')}
     >
       <Icon size={16} weight="regular" />
@@ -47,15 +48,19 @@ interface Props {
   notifyDenied: boolean;
   sound: boolean;
   awake: boolean;
+  calm: boolean;
   wakeLockSupported: boolean;
   onNotify: () => void;
   onSound: () => void;
   onAwake: () => void;
+  onCalm: () => void;
 }
 
 export function Controls(p: Props) {
   return (
     <div className="flex flex-wrap items-center justify-end gap-2">
+      <Toggle on={p.calm} label="Calm" hint="Pause character animation"
+        OnIcon={Leaf} OffIcon={Leaf} onClick={p.onCalm} />
       <Toggle
         on={p.notify}
         disabled={p.notifyDenied}
