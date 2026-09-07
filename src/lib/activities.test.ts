@@ -10,7 +10,7 @@ import {
 } from './activities';
 
 const STOPS: DaylightStop[] = ['night', 'dawn', 'day', 'golden', 'dusk'];
-const ACTIVITIES: Activity[] = ['at-window', 'with-cat', 'on-bed', 'stretching', 'coffee'];
+const ACTIVITIES: Activity[] = ['stretching', 'lean-back', 'look-around'];
 const POSES: FocusPose[] = ['typing', 'thinking', 'head-desk'];
 
 describe('break pools', () => {
@@ -22,9 +22,8 @@ describe('break pools', () => {
     }
   });
 
-  it('never sends him outside or to bed at dawn', () => {
-    // Waking up and immediately going back to bed would read as a bug.
-    expect(activityPool('dawn')).not.toContain('on-bed');
+  it('only schedules activities supported by the approved seated room sprites', () => {
+    for (const stop of STOPS) expect([...activityPool(stop)].sort()).toEqual([...ACTIVITIES].sort());
   });
 
   it('has no duplicates within a pool', () => {

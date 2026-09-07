@@ -12,15 +12,15 @@
 
 import type { DaylightStop } from './daylight';
 
-export type Activity = 'at-window' | 'with-cat' | 'on-bed' | 'stretching' | 'coffee';
+export type Activity = 'stretching' | 'lean-back' | 'look-around';
 export type FocusPose = 'typing' | 'thinking' | 'head-desk';
 
 const POOLS: Record<DaylightStop, readonly Activity[]> = {
-  night: ['with-cat', 'on-bed', 'coffee', 'at-window'],
-  dawn: ['coffee', 'at-window', 'stretching', 'with-cat'],
-  day: ['at-window', 'with-cat', 'stretching', 'coffee', 'on-bed'],
-  golden: ['at-window', 'coffee', 'with-cat', 'stretching'],
-  dusk: ['at-window', 'with-cat', 'coffee', 'on-bed'],
+  night: ['lean-back', 'look-around', 'stretching'],
+  dawn: ['stretching', 'look-around', 'lean-back'],
+  day: ['stretching', 'lean-back', 'look-around'],
+  golden: ['look-around', 'stretching', 'lean-back'],
+  dusk: ['lean-back', 'stretching', 'look-around'],
 };
 
 /** Deterministic, seeded, and stable across reloads and machines. */

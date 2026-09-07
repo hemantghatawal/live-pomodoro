@@ -5,7 +5,7 @@ import { chooseLayers, preferredVariants, type RoomState } from './roomLayers';
 const BASE: RoomState = {
   phase: 'focus',
   pose: 'typing',
-  activity: 'at-window',
+  activity: 'look-around',
   cycleIndex: 0,
   daylight: 1,
   screen: 'a',
@@ -39,7 +39,7 @@ describe('a minimal asset set', () => {
 
   it('falls back to the one pose that exists during a break', () => {
     // The whole point: a single character image covers all eight poses.
-    const state: RoomState = { ...BASE, phase: 'break', activity: 'on-bed' };
+    const state: RoomState = { ...BASE, phase: 'break', activity: 'stretching' };
     const out = ids(chooseLayers(SLOTS, only('room-base', 'pose-typing'), state));
     expect(out).toContain('pose-typing');
   });
@@ -47,9 +47,9 @@ describe('a minimal asset set', () => {
 
 describe('variant selection', () => {
   it('prefers the exact pose when it exists', () => {
-    const state: RoomState = { ...BASE, phase: 'break', activity: 'on-bed' };
-    const out = ids(chooseLayers(SLOTS, only('pose-typing', 'pose-on-bed'), state));
-    expect(out).toEqual(['pose-on-bed']);
+    const state: RoomState = { ...BASE, phase: 'break', activity: 'stretching' };
+    const out = ids(chooseLayers(SLOTS, only('pose-typing', 'pose-stretching'), state));
+    expect(out).toEqual(['pose-stretching']);
   });
 
   it('never shows two poses at once', () => {

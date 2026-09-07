@@ -79,7 +79,7 @@ function key(data, width, height, channels) {
 }
 
 /** Register generated sprite cells without rescaling the character between frames. */
-async function registerSprites(pipeline, width, height) {
+async function registerSprites(pipeline, width, height, breakSheet = false) {
   if (width !== 1536 || height !== 1024) throw new Error('Developer sheet must be 1536x1024 (2x2 cells).');
   const rgba = await pipeline.ensureAlpha().raw().toBuffer();
   const cells = [];
@@ -97,9 +97,19 @@ async function registerSprites(pipeline, width, height) {
     }
     const w = maxX - minX + 1;
     const h = maxY - minY + 1;
+    // Raised elbows and turned heads must not drag the seated torso sideways.
+    let anchorX = (minX + maxX) / 2;
+    if (breakSheet) {
+      let waistLeft = 768, waistRight = 0;
+      for (let y = maxY - 8; y <= maxY; y++) for (let x = minX; x <= maxX; x++) {
+        if (rgba[((top + y) * width + left + x) * 4 + 3] < 128) continue;
+        waistLeft = Math.min(waistLeft, x); waistRight = Math.max(waistRight, x);
+      }
+      anchorX = (waistLeft + waistRight) / 2;
+    }
     const input = await sharp(rgba, { raw: { width, height, channels: 4 } })
       .extract({ left: left + minX, top: top + minY, width: w, height: h }).png().toBuffer();
-    cells.push({ input, left: left + Math.round((768 - w) / 2), top: top + 40 });
+    cells.push({ input, left: left + (breakSheet ? Math.round(384 - anchorX + minX) : Math.round((768 - w) / 2)), top: top + 40 });
     console.log(`  sprite ${frame}: ${w}x${h}, registered at head y=40, centre x=384`);
   }
   return sharp({ create: { width, height, channels: 4, background: '#00000000' } }).composite(cells);
@@ -135,7 +145,9 @@ for (const file of images) {
     ? sharp(key(data, width, height, channels), { raw: { width, height, channels: 4 } })
     : sharp(src);
 
-  if (id === 'developer-sprites') pipeline = await registerSprites(pipeline, width, height);
+  if (id === 'developer-sprites' || id === 'developer-break-sprites') {
+    pipeline = await registerSprites(pipeline, width, height, id === 'developer-break-sprites');
+  }
 
   const { size } = await pipeline.webp({ quality: 90, effort: 5 }).toFile(dest);
 

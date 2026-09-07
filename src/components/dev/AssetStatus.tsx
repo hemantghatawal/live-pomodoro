@@ -9,7 +9,7 @@ import { slotStatus, type SlotCategory } from '../../lib/assets';
 
 const ORDER: SlotCategory[] = ['room', 'character', 'cat', 'prop', 'screen', 'light', 'view', 'presence'];
 
-export type ScenePreview = 'live' | 'day-focus' | 'night-focus' | 'day-break' | 'night-break';
+export type ScenePreview = 'live' | 'day-focus' | 'night-focus' | 'day-break' | 'night-break' | 'raise-arms' | 'stretch' | 'look-left' | 'look-right';
 
 export function AssetStatus({ preview, onPreview }: {
   preview: ScenePreview; onPreview: (value: ScenePreview) => void;
@@ -38,8 +38,12 @@ export function AssetStatus({ preview, onPreview }: {
               <option value="live">Live local light and phase</option>
               <option value="day-focus">Day / focus</option>
               <option value="night-focus">Night / focus</option>
-              <option value="day-break">Day / break</option>
-              <option value="night-break">Night / break</option>
+              <option value="day-break">Day / play break sequence</option>
+              <option value="night-break">Night / play break sequence</option>
+              <option value="raise-arms">Inspect: raising arms</option>
+              <option value="stretch">Inspect: seated stretch</option>
+              <option value="look-left">Inspect: looking left</option>
+              <option value="look-right">Inspect: looking right</option>
             </select>
           </label>
           {ORDER.map((category) => {

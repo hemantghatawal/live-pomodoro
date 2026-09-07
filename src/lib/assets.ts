@@ -64,6 +64,7 @@ export const SLOTS: readonly Slot[] = [
 
   // Living things
   { id: 'developer-sprites', label: 'Developer, four frames', category: 'character', z: 70, spriteSheet: true },
+  { id: 'developer-break-sprites', label: 'Developer break movements', category: 'character', z: 70, spriteSheet: true },
   { id: 'cat-sitting', label: 'Cat sitting', category: 'cat', z: 60, variantOf: 'cat' },
   { id: 'cat-walking', label: 'Cat walking', category: 'cat', z: 60, variantOf: 'cat' },
   { id: 'cat-asleep-on-desk', label: 'Cat asleep', category: 'cat', z: 60, variantOf: 'cat' },

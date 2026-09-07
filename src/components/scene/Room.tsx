@@ -6,6 +6,7 @@ import type { CycleView } from '../../hooks/useCycle';
 import { DeveloperSprite } from './DeveloperSprite';
 import { daylightAt, tintCss } from '../../lib/daylight';
 import type { CSSProperties } from 'react';
+import type { ScenePreview } from '../dev/AssetStatus';
 
 /**
  * Composes the room from whatever art exists.
@@ -21,13 +22,14 @@ interface Props {
   /** 0..1, from the daylight system. */
   daylight: number;
   calm?: boolean;
-  preview?: 'live' | 'day-focus' | 'night-focus' | 'day-break' | 'night-break';
+  preview?: ScenePreview;
 }
 
 export function Room({ cycle, daylight, calm = false, preview = 'live' }: Props) {
   const inspecting = import.meta.env.DEV && preview !== 'live';
   const light = inspecting ? daylightAt(preview.startsWith('night') ? 0 : 12) : null;
-  const phase = inspecting ? (preview.endsWith('break') ? 'break' : 'focus') : cycle.phase;
+  const phase = inspecting ? (preview.endsWith('focus') ? 'focus' : 'break') : cycle.phase;
+  const inspectFrame = inspecting ? ['raise-arms', 'stretch', 'look-left', 'look-right'].indexOf(preview) : -1;
   const layers = chooseLayers(SLOTS_BY_Z, hasAsset, {
     phase: cycle.phase,
     pose: cycle.pose,
@@ -57,7 +59,8 @@ export function Room({ cycle, daylight, calm = false, preview = 'live' }: Props)
         );
       })}
 
-      <DeveloperSprite phase={phase} calm={calm} />
+      <DeveloperSprite phase={phase} calm={calm} activity={cycle.activity} inspectFrame={inspectFrame}
+        previewPlaying={inspecting && preview.endsWith('break')} />
       {assetUrl('room-base') && hasAsset('developer-sprites') ? (
         <Layer src={assetUrl('room-base')!} z={75} className="room-foreground" />
       ) : null}
