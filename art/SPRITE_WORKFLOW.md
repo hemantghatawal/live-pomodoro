@@ -29,7 +29,7 @@ Master: `src/room-base.png`, copied unchanged from `previews/room-base-opposite-
 
 The window is behind the camera. Keep this approved composition. For a future connected presence feature, use a small honest text count near the phase label; hide it when unavailable. Birds, exterior city layers, visible screen contents and wall-clock sprites are deferred for this camera. Do not fabricate presence or add a new window just to preserve the old plan.
 
-The room does not yet animate the fan, plant, cat, or desk timer. Travelling poses and the presence backend remain future work.
+The room now rotates the fan, sways the plant, switches two sleeping-cat poses, emits mug steam and changes a small desk-timer glow by phase. Cat walking, travelling poses and the presence backend remain future work.
 
 ## Break animation update
 
@@ -46,3 +46,9 @@ The development panel can play a break from its beginning without changing the a
 - Browser inspected at desktop and a narrow portrait viewport: character/monitor occlusion, transparent edges and countdown clearance.
 - Calm toggled in the real UI; static-frame state confirmed. Night/rest preview confirmed frame 3 and darker lighting. Closing preview restores real phase and local light.
 - Unit tests cover sprite timing, break/rest behavior, calm mode, resume determinism, and excluding a spritesheet from the full-room layer stack.
+
+## Smoother movement and room life
+
+`developer-transition-sprites.png` supplies neutral rest, two arm-rise intermediates and a chin-resting thinking pose. The sequence reverses the intermediate frames when lowering arms. All three registered sheets are assembled into `developer-atlas.webp` (4 columns × 3 rows), decoded before display. Typing frame 2 reuses the base head and shoulders to prevent jitter.
+
+`room-clean.png` removes only the baked fan blades and foreground plant for independent compositing. The original room remains the fallback. `room-props-sheet.png` supplies fan, plant and two sleeping-cat frames. RoomLife pauses all loops for Calm, reduced motion or hidden tabs. Exact prompts and actual source dimensions are recorded in [ANIMATION_ASSETS.md](ANIMATION_ASSETS.md).

@@ -8,6 +8,7 @@ import { daylightAt, tintCss } from '../../lib/daylight';
 import type { CSSProperties } from 'react';
 import type { ScenePreview } from '../dev/AssetStatus';
 import { BreakThought } from './BreakThought';
+import { RoomLife } from './RoomLife';
 
 /**
  * Composes the room from whatever art exists.
@@ -31,6 +32,8 @@ export function Room({ cycle, daylight, calm = false, preview = 'live' }: Props)
   const light = inspecting ? daylightAt(preview.startsWith('night') ? 0 : 12) : null;
   const phase = inspecting ? (preview.endsWith('focus') ? 'focus' : 'break') : cycle.phase;
   const inspectFrame = inspecting ? ['raise-arms', 'stretch', 'look-left', 'look-right'].indexOf(preview) : -1;
+  const layeredProps = ['room-clean', 'ambient-fan', 'ambient-plant', 'ambient-cat'].every(hasAsset);
+  const roomSrc = assetUrl(layeredProps ? 'room-clean' : 'room-base');
   const layers = chooseLayers(SLOTS_BY_Z, hasAsset, {
     phase: cycle.phase,
     pose: cycle.pose,
@@ -47,7 +50,7 @@ export function Room({ cycle, daylight, calm = false, preview = 'live' }: Props)
         '--tint': tintCss(light.tint), '--lamp': light.lamp,
       } as CSSProperties : undefined}>
       {layers.map((slot) => {
-        const src = assetUrl(slot.id);
+        const src = slot.id === 'room-base' ? roomSrc : assetUrl(slot.id);
         if (!src) return null;
         return (
           <Layer
@@ -60,10 +63,12 @@ export function Room({ cycle, daylight, calm = false, preview = 'live' }: Props)
         );
       })}
 
+      {layeredProps ? <RoomLife calm={calm} phase={phase} /> : null}
+
       <DeveloperSprite phase={phase} calm={calm} activity={cycle.activity} inspectFrame={inspectFrame}
         previewPlaying={inspecting && preview.endsWith('break')} />
       {assetUrl('room-base') && hasAsset('developer-sprites') ? (
-        <Layer src={assetUrl('room-base')!} z={75} className="room-foreground" />
+        <Layer src={roomSrc!} z={75} className="room-foreground" />
       ) : null}
 
       {/* Room lighting, applied over the flat art rather than baked into it. */}

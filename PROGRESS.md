@@ -1,9 +1,19 @@
 # Live Pomodoro - Project Progress
 
-**Current focus:** Animated room with two registered developer sheets, opening break stretch, relaxed head turns, occasional idea/fact thought bubbles, monitor occlusion, local-time tint, and Calm. Remaining props, travelling activities and presence are not implemented yet.
+**Current focus:** Animated room with a predecoded 12-cell character atlas, intermediate stretch poses, thinking, head turns, occasional smiles and thoughts, rotating fan, swaying plant, sleeping cat and cup steam. Travelling activities and presence remain future work.
 **Last updated:** 2026-09-07
 
+## Current release status
+
+Working locally: shared clock, approved cartoon room, focus and break sprite sequences, opening stretch, occasional smiles and thoughts, local-time lighting, optional notification/chime controls, and a compact Settings popover. Defaults for new preferences: Calm off, Notify off, Sound off, Keep awake on. Previously saved choices are preserved.
+
+Still outstanding: cat walking and character interactions, travelling character activities, real presence backend, final day/night and long-session validation, performance audit, and deployment/domain setup. The current worker configuration points to a worker that has not been implemented, so the full deployment configuration is not ready to ship. Historical checklist entries below include superseded side-view ideas; use `art/SPRITE_WORKFLOW.md` for the current art scope.
+
 See [the current sprite workflow](art/SPRITE_WORKFLOW.md) for the approved camera, exact asset pipeline, validation, and revised scope. Earlier checklist entries remain a historical backlog; the four-frame sheet replaces the initial separate typing/blink assets.
+
+## Latest animation validation
+
+104 tests pass; production build passes. Browser verified opening stretch playback from the unified atlas, character/monitor occlusion and new room props. Calm freezes both character and room layers. Typing keeps the same head/shoulder pixels while forearms alternate. Original room retained; exact new image prompts are in `art/ANIMATION_ASSETS.md`. Longer viewing and travelling animations remain outstanding.
 
 ## Status legend
 
@@ -26,7 +36,7 @@ See [the current sprite workflow](art/SPRITE_WORKFLOW.md) for the approved camer
 | 4 | Scene assembly | `[~]` | Claude |
 | 5 | Tier 1 stateful movement | `[x]` | Claude |
 | 6 | Lighting system | `[~]` | Claude |
-| 7 | Tier 2 ambient loops | `[ ]` | Claude |
+| 7 | Tier 2 ambient loops | `[~]` | Claude |
 | 8 | Tier 3 event scheduler | `[ ]` | Claude |
 | 9 | Presence, birds on the wire | `[ ]` | Claude |
 | 10 | Polish and ship | `[ ]` | Claude |

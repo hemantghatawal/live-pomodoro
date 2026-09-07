@@ -62,6 +62,14 @@ export const SLOTS: readonly Slot[] = [
   { id: 'desk-toy', label: 'Desk toy', category: 'prop', z: 54 },
   { id: 'car', label: 'Car headlights', category: 'prop', z: 15 },
 
+  // Separately composed assets are consumed by RoomLife / DeveloperSprite.
+  { id: 'room-clean', label: 'Room animation plate', category: 'room', z: 20, spriteSheet: true },
+  { id: 'ambient-fan', label: 'Rotating fan', category: 'prop', z: 60, spriteSheet: true },
+  { id: 'ambient-plant', label: 'Swaying plant', category: 'prop', z: 60, spriteSheet: true },
+  { id: 'ambient-cat', label: 'Sleeping cat', category: 'cat', z: 60, spriteSheet: true },
+  { id: 'developer-atlas', label: 'Unified character atlas', category: 'character', z: 70, spriteSheet: true },
+  { id: 'developer-transition-sprites', label: 'Stretch transitions and thinking', category: 'character', z: 70, spriteSheet: true },
+
   // Living things
   { id: 'developer-sprites', label: 'Developer, four frames', category: 'character', z: 70, spriteSheet: true },
   { id: 'developer-break-sprites', label: 'Developer break movements', category: 'character', z: 70, spriteSheet: true },

@@ -1,11 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { breakFrame } from './breakMotion';
+import { breakFrame, atlasFrame } from './breakMotion';
 import { FOCUS_MS, CYCLE_MS } from './cycle';
 import type { Activity } from './activities';
 
 const activities: Activity[] = ['stretching', 'lean-back', 'look-around'];
 
 describe('break movement sequence', () => {
+  it('plays intermediate poses in reverse when lowering the arms', () => {
+    const cell = (ms: number) => { const p = breakFrame(FOCUS_MS + ms, 'stretching'); return atlasFrame(p.sheet, p.frame); };
+    expect([600, 820, 1040, 1300, 5800, 6060, 6280, 6500].map(cell))
+      .toEqual([9, 10, 4, 5, 4, 10, 9, 8]);
+    expect(cell(48000)).toBe(11);
+  });
   it('raises arms before stretching, lowers them, and rests', () => {
     for (const activity of activities) {
       expect(breakFrame(FOCUS_MS + 600, activity).action).toBe('raise-arms');
@@ -31,7 +37,7 @@ describe('break movement sequence', () => {
         expect(state.frame).toBeGreaterThanOrEqual(0);
         expect(state.frame).toBeLessThan(4);
       }
-      expect(seen.size).toBe(5);
+      expect(seen.size).toBe(6);
       expect(resting / 3000).toBeGreaterThan(0.7);
     }
   });

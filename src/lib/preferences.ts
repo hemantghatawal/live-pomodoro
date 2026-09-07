@@ -15,7 +15,7 @@ export interface Preferences {
 export const DEFAULT_PREFERENCES: Preferences = {
   notify: false,
   sound: false,
-  awake: false,
+  awake: true,
   calm: false,
 };
 

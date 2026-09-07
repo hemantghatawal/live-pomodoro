@@ -145,8 +145,26 @@ for (const file of images) {
     ? sharp(key(data, width, height, channels), { raw: { width, height, channels: 4 } })
     : sharp(src);
 
-  if (id === 'developer-sprites' || id === 'developer-break-sprites') {
-    pipeline = await registerSprites(pipeline, width, height, id === 'developer-break-sprites');
+  if (id === 'developer-sprites' || id === 'developer-break-sprites' || id === 'developer-transition-sprites') {
+    pipeline = await registerSprites(pipeline, width, height, id !== 'developer-sprites');
+  }
+
+  if (id === 'room-props-sheet') {
+    const keyedPng = await pipeline.png().toBuffer();
+    const cellWidth = width / 2, cellHeight = height / 2;
+    const cell = async (index) => sharp(await sharp(keyedPng).extract({ left: index % 2 * cellWidth,
+      top: Math.floor(index / 2) * cellHeight, width: cellWidth, height: cellHeight }).png().toBuffer());
+    await (await cell(0)).webp({ quality: 95 }).toFile(path.join(OUT, 'ambient-fan.webp'));
+    await (await cell(1)).trim({ background: '#00000000', threshold: 10 }).webp({ quality: 95 }).toFile(path.join(OUT, 'ambient-plant.webp'));
+    const cats = [];
+    for (let index = 2; index < 4; index++) {
+      const input = await (await cell(index)).trim({ background: '#00000000', threshold: 10 })
+        .resize(360, 240, { fit: 'contain', background: '#00000000' }).png().toBuffer();
+      cats.push({ input, left: (index - 2) * 400 + 20, top: 20 });
+    }
+    await sharp({ create: { width: 800, height: 280, channels: 4, background: '#00000000' } })
+      .composite(cats).webp({ quality: 95 }).toFile(path.join(OUT, 'ambient-cat.webp'));
+    continue;
   }
 
   const { size } = await pipeline.webp({ quality: 90, effort: 5 }).toFile(dest);
@@ -157,3 +175,25 @@ for (const file of images) {
 }
 
 console.log(`\nDone. ${images.length} file(s) written to ${OUT}/`);
+
+// Assemble a single atlas; source-sheet switches cannot trigger image decoding mid-pose.
+const sheetIds = ['developer-sprites', 'developer-break-sprites', 'developer-transition-sprites'];
+if (images.includes('developer-transition-sprites.png')) {
+  const atlas = [];
+  for (let row = 0; row < sheetIds.length; row++) for (let frame = 0; frame < 4; frame++) {
+    let input = await sharp(path.join(OUT, `${sheetIds[row]}.webp`))
+      .extract({ left: frame % 2 * 768, top: Math.floor(frame / 2) * 512, width: 768, height: 512 })
+      .png().toBuffer();
+    if (row === 0 && frame === 2) {
+      // Typing changes the forearms only: keep the head and shoulders registered.
+      const upper = await sharp(path.join(OUT, 'developer-sprites.webp'))
+        .extract({ left: 0, top: 0, width: 768, height: 300 }).png().toBuffer();
+      const lower = await sharp(input).extract({ left: 0, top: 300, width: 768, height: 212 }).png().toBuffer();
+      input = await sharp({ create: { width: 768, height: 512, channels: 4, background: '#00000000' } })
+        .composite([{ input: upper, top: 0, left: 0 }, { input: lower, top: 300, left: 0 }]).png().toBuffer();
+    }
+    atlas.push({ input, left: frame * 768, top: row * 512 });
+  }
+  await sharp({ create: { width: 3072, height: 1536, channels: 4, background: '#00000000' } })
+    .composite(atlas).webp({ quality: 95 }).toFile(path.join(OUT, 'developer-atlas.webp'));
+}
