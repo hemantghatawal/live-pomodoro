@@ -98,7 +98,7 @@
 
 /* Original room pixels, clipped along the upper monitor edges, never redrawn. */
 .room-foreground {
-  clip-path: polygon(0% 100%, 0% 94%, 29.3% 94%, 29.3% 62.3%, 47.5% 66.2%, 68.5% 63.6%, 68.5% 100%);
+  clip-path: polygon(11% 100%, 11% 92.5%, 22.3% 65.8%, 29.3% 65.8%, 29.3% 62.3%, 47.5% 66.2%, 68.5% 63.6%, 68.5% 100%);
 }
 
 .room-lamp-light {
@@ -179,3 +179,13 @@
 @keyframes leaf-breeze { 0%,100% { transform: skewX(-.4deg); } 50% { transform: skewX(.5deg); } }
 @keyframes cat-stir { 0%,92%,100% { background-position: 0% 0; } 93%,96% { background-position: 100% 0; } }
 @keyframes steam-rise { 0% { opacity: 0; transform: translateY(10%); } 25% { opacity: .65; } 100% { opacity: 0; transform: translate(25%,-55%); } }
+
+.developer-floor-activity {
+  position: absolute;
+  z-index: 70;
+  width: 34%;
+  aspect-ratio: 3 / 4;
+  background-size: 400% 200%;
+  background-repeat: no-repeat;
+  transform: translateX(-50%);
+}

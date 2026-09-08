@@ -1,19 +1,17 @@
 # Live Pomodoro - Project Progress
 
-**Current focus:** Animated room with a predecoded 12-cell character atlas, intermediate stretch poses, thinking, head turns, occasional smiles and thoughts, rotating fan, swaying plant, sleeping cat and cup steam. Travelling activities and presence remain future work.
-**Last updated:** 2026-09-07
+**Current focus:** Direct break activities and varied desk work. Walking is removed. The character plays with the cat, stretches his back to the left of the bed. Headphone work includes blinking, thinking and adjusting an earcup.
+**Last updated:** 2026-09-08
 
 ## Current release status
 
-Working locally: shared clock, approved cartoon room, focus and break sprite sequences, opening stretch, occasional smiles and thoughts, local-time lighting, optional notification/chime controls, and a compact Settings popover. Defaults for new preferences: Calm off, Notify off, Sound off, Keep awake on. Previously saved choices are preserved.
+Working locally: shared clock, approved room, opening seated stretch, direct cat play, back stretches, occasional smiles/thoughts, headphone work, local-time lighting, fan/plant/cat/steam loops and Settings. Screens are deferred at the user's request. Walking paths and their runtime sprite sheet have been removed; original source art is preserved for the two petting frames.
 
-Still outstanding: cat walking and character interactions, travelling character activities, real presence backend, final day/night and long-session validation, performance audit, and deployment/domain setup. The current worker configuration points to a worker that has not been implemented, so the full deployment configuration is not ready to ship. Historical checklist entries below include superseded side-view ideas; use `art/SPRITE_WORKFLOW.md` for the current art scope.
+Still outstanding: further visual polish and long-session validation, real presence backend, performance audit and deployment/domain setup. The configured worker is not implemented yet. Historical checklists below are a backlog, not the current release contract.
 
-See [the current sprite workflow](art/SPRITE_WORKFLOW.md) for the approved camera, exact asset pipeline, validation, and revised scope. Earlier checklist entries remain a historical backlog; the four-frame sheet replaces the initial separate typing/blink assets.
+## Latest validation
 
-## Latest animation validation
-
-104 tests pass; production build passes. Browser verified opening stretch playback from the unified atlas, character/monitor occlusion and new room props. Calm freezes both character and room layers. Typing keeps the same head/shoulder pixels while forearms alternate. Original room retained; exact new image prompts are in `art/ANIMATION_ASSETS.md`. Longer viewing and travelling animations remain outstanding.
+112 tests and production build pass. Browser checked back-stretch placement, headphone work and immediate cat play. New floor activities remain stationary and respect Calm/reduced motion; absolute timing restores their state after sleep/reload. Sprite changes apply before browser paint. Source art and exact built-in image-generation prompts are documented in `art/SPRITE_WORKFLOW.md`.
 
 ## Status legend
 
@@ -288,3 +286,21 @@ Nothing blocked yet.
 | 2026-09-04 | Presence promoted from deferred to core, expressed as birds on a power line |
 | 2026-09-04 | Vite over Next.js, so the site and the Durable Object deploy as one Cloudflare project |
 | 2026-09-04 | One rAF loop writes CSS custom properties, CSS does the rest, no per-frame React |
+
+## Cat visit — September 7
+
+Added eight full-body frames for standing, walking and petting. A 28-second visit begins 1:45 into the break, after the opening stretch and second thought bubble. The character rises, walks left, crouches and pets the cat, then returns and sits down. Paths use animation-frame updates; sprite frames are keyed, foot-aligned, registered horizontally and decoded before use. Expanded foreground desk masking keeps the character behind the table. Calm/reduced motion suppress the visit, hidden tabs stop the player, and absolute time restores the correct position on resume. A development preview plays the visit immediately.
+
+Validated walking scale, petting contact and desk occlusion in the browser, plus Calm returning to a single seated character. Tests cover the activity order, continuous route, frame limits, handoff opacity and reload determinism. Exact asset prompt: `art/previews/developer-visit-prompt.md`. Independent cat walking, other destinations and deployment remain outstanding.
+
+## September 8 revision
+
+Supersedes the September 7 walking visit: the character now cuts directly to cat play at break 1:45 for 18 seconds, back stretches at 2:55 for 18 seconds, and pushups at 4:05 for 18 seconds. Walking code and runtime frames are removed. Work alternates regular and headphone blocks with brief thinking/adjusting gestures. No screen work in this update.
+
+## Pushup removal — September 8
+
+Removed front-facing pushup source/runtime images, generation prompt, preprocessing, scheduling, preloading and preview option at the user’s request. Breaks retain direct cat play and back stretches. The earlier side-view samples remain unused in the back-stretch source sheet.
+
+## Expanded animation frames
+
+Added 16 intermediate poses across regular work, headphones, seated stretch/head turn, cat play and standing back stretch. Seated atlas now has 28 frames; both floor loops have four frames. Opening/closing blinks, four-frame typing cycles and seven-step stretch transitions are scheduled from absolute time. Browser verified expanded atlas stretch playback and floor placement; original room, no-walking and no-pushup scope preserved. See `art/SPRITE_WORKFLOW.md` for sources and exact prompts.

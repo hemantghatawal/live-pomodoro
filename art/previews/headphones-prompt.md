@@ -1,0 +1,5 @@
+# headphones sprites
+
+Generated using the built-in image generation tool. Sources are saved in art/src and runtime sheets in src/assets/room.
+
+Edit reference 1 into a matching 1536x1024 exact2x2 sprite sheet with four768x512 waist-up front-seated poses of exactly SAME developer. Preserve original brown skin, messy black hair, rust orange shirt, facial identity, head size, shoulders, center and clean flat cartoon outlines. All four wear dark charcoal over-ear headphones with a padded headband visible over hair. Pure solid #FF00FF background, no furniture shadows text labels gridlines. Top-left: working eyes down, hands typing nearwaist. Top-right: EXACT SAME working pose but eyes closed in blink, keep every other line identical. Bottom-left: quiet thinking, one hand on chin, eyes glancing to the side, subtle smile, same headposition. Bottom-right: one hand briefly adjusting headphone earcup, relaxed slight smile, same body and face scale. Hair/headband top at y30, waistbottom y480, headwidth190, torsocenterx384 in everycell. No change of camera or body size.

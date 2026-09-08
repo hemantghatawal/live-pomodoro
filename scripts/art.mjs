@@ -145,8 +145,45 @@ for (const file of images) {
     ? sharp(key(data, width, height, channels), { raw: { width, height, channels: 4 } })
     : sharp(src);
 
-  if (id === 'developer-sprites' || id === 'developer-break-sprites' || id === 'developer-transition-sprites') {
+  if (id === 'developer-sprites' || id === 'developer-break-sprites' || id === 'developer-transition-sprites' || id === 'developer-headphone-sprites' || id.endsWith('-inbetweens')) {
     pipeline = await registerSprites(pipeline, width, height, id !== 'developer-sprites');
+  }
+
+  if (id === 'developer-visit-sprites') {
+    // Only the two petting cells are shipped; walking source art is archived.
+    const png = await pipeline.png().toBuffer();
+    const cells = [];
+    for (let frame = 0; frame < 2; frame++) {
+      const input = await sharp(png).extract({ left: (frame + 2) * 384, top: 512, width: 384, height: 512 }).png().toBuffer();
+      cells.push({ input, left: frame * 384 + (frame ? 32 : 0), top: 45 });
+    }
+    // Composite into padded temporary cells then crop to their exact bounds.
+    const pairs = [];
+    for (let frame = 0; frame < 2; frame++) {
+      const input = await sharp({ create: { width: 800, height: 600, channels: 4, background: '#00000000' } })
+        .composite([{ input: cells[frame].input, left: frame ? 32 : 0, top: 45 }]).png().toBuffer();
+      pairs.push({ input: await sharp(input).extract({ left: 0, top: 0, width: 384, height: 512 }).png().toBuffer(), left: frame * 384, top: 0 });
+    }
+    await sharp({ create: { width: 768, height: 512, channels: 4, background: '#00000000' } })
+      .composite(pairs).webp({ quality: 95 }).toFile(path.join(OUT, 'developer-cat-sprites.webp'));
+    continue;
+  }
+
+  if (id === 'developer-exercise-sprites') {
+    const png = await pipeline.png().toBuffer();
+    const cells = [];
+    for (let frame = 0; frame < 4; frame++) {
+      // Generated standing feet extend below the requested midpoint; split in the empty gutter.
+      const rowTop = frame < 2 ? 0 : 570;
+      const cropped = await sharp(png).extract({ left: frame % 2 * 768, top: rowTop, width: 768,
+        height: frame < 2 ? 570 : height - 570 }).png().toBuffer();
+      const trimmed = await sharp(cropped).trim({ background: '#00000000', threshold: 10 }).png().toBuffer();
+      const input = await sharp(trimmed).resize(frame < 2 ? { height: 440 } : { width: 600 }).png().toBuffer();
+      const meta = await sharp(input).metadata();
+      cells.push({ input, left: frame % 2 * 768 + Math.round((768 - meta.width) / 2),
+        top: Math.floor(frame / 2) * 512 + 480 - meta.height });
+    }
+    pipeline = sharp({ create: { width: 1536, height: 1024, channels: 4, background: '#00000000' } }).composite(cells);
   }
 
   if (id === 'room-props-sheet') {
@@ -177,16 +214,16 @@ for (const file of images) {
 console.log(`\nDone. ${images.length} file(s) written to ${OUT}/`);
 
 // Assemble a single atlas; source-sheet switches cannot trigger image decoding mid-pose.
-const sheetIds = ['developer-sprites', 'developer-break-sprites', 'developer-transition-sprites'];
+const sheetIds = ['developer-sprites', 'developer-break-sprites', 'developer-transition-sprites', 'developer-work-inbetweens', 'developer-break-inbetweens', 'developer-headphone-sprites', 'developer-phones-inbetweens'];
 if (images.includes('developer-transition-sprites.png')) {
   const atlas = [];
   for (let row = 0; row < sheetIds.length; row++) for (let frame = 0; frame < 4; frame++) {
     let input = await sharp(path.join(OUT, `${sheetIds[row]}.webp`))
       .extract({ left: frame % 2 * 768, top: Math.floor(frame / 2) * 512, width: 768, height: 512 })
       .png().toBuffer();
-    if (row === 0 && frame === 2) {
+    if ((row === 0 && frame === 2) || (row === 3 && (frame === 1 || frame === 2)) || (row === 6 && frame === 3)) {
       // Typing changes the forearms only: keep the head and shoulders registered.
-      const upper = await sharp(path.join(OUT, 'developer-sprites.webp'))
+      const upper = await sharp(path.join(OUT, row === 6 ? 'developer-headphone-sprites.webp' : 'developer-sprites.webp'))
         .extract({ left: 0, top: 0, width: 768, height: 300 }).png().toBuffer();
       const lower = await sharp(input).extract({ left: 0, top: 300, width: 768, height: 212 }).png().toBuffer();
       input = await sharp({ create: { width: 768, height: 512, channels: 4, background: '#00000000' } })
@@ -194,6 +231,33 @@ if (images.includes('developer-transition-sprites.png')) {
     }
     atlas.push({ input, left: frame * 768, top: row * 512 });
   }
-  await sharp({ create: { width: 3072, height: 1536, channels: 4, background: '#00000000' } })
+  await sharp({ create: { width: 3072, height: sheetIds.length * 512, channels: 4, background: '#00000000' } })
     .composite(atlas).webp({ quality: 95 }).toFile(path.join(OUT, 'developer-atlas.webp'));
+}
+
+// Expand the stationary floor loops, preserving the two approved endpoints.
+if (images.includes('developer-floor-extras.png')) {
+  const extras = path.join(OUT, 'developer-floor-extras.webp');
+  for (const kind of ['cat', 'exercise']) {
+    const cw = kind === 'cat' ? 384 : 768;
+    const composites = [];
+    for (let f = 0; f < 4; f++) {
+      let input;
+      if (f < 2) {
+        input = await sharp(path.join(OUT, `developer-${kind}-sprites.webp`))
+          .extract({ left: f * cw, top: 0, width: cw, height: 512 }).png().toBuffer();
+      } else {
+        const cropped = await sharp(extras).extract({ left: (f - 2) * 768, top: kind === 'cat' ? 0 : 450,
+          width: 768, height: kind === 'cat' ? 450 : 574 }).png().toBuffer();
+        const trimmed = await sharp(cropped).trim({ background: '#00000000', threshold: 10 }).png().toBuffer();
+        const pose = await sharp(trimmed).resize({ height: kind === 'cat' ? 276 : 440 }).png().toBuffer();
+        const meta = await sharp(pose).metadata();
+        input = await sharp({ create: { width: cw, height: 512, channels: 4, background: '#00000000' } })
+          .composite([{ input: pose, left: kind === 'cat' ? 0 : Math.round((cw - meta.width) / 2), top: 480 - meta.height }]).png().toBuffer();
+      }
+      composites.push({ input, left: f * cw, top: 0 });
+    }
+    await sharp({ create: { width: cw * 4, height: 512, channels: 4, background: '#00000000' } })
+      .composite(composites).webp({ quality: 95 }).toFile(path.join(OUT, `developer-${kind}-smooth.webp`));
+  }
 }

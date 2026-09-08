@@ -9,7 +9,7 @@ import { slotStatus, type SlotCategory } from '../../lib/assets';
 
 const ORDER: SlotCategory[] = ['room', 'character', 'cat', 'prop', 'screen', 'light', 'view', 'presence'];
 
-export type ScenePreview = 'live' | 'day-focus' | 'night-focus' | 'day-break' | 'night-break' | 'raise-arms' | 'stretch' | 'look-left' | 'look-right' | 'idea' | 'room-fact';
+export type ScenePreview = 'live' | 'day-focus' | 'night-focus' | 'day-break' | 'night-break' | 'raise-arms' | 'stretch' | 'look-left' | 'look-right' | 'idea' | 'room-fact' | 'cat-visit' | 'back-stretch' | 'headphones-focus';
 
 export function AssetStatus({ preview, onPreview }: {
   preview: ScenePreview; onPreview: (value: ScenePreview) => void;
@@ -40,6 +40,9 @@ export function AssetStatus({ preview, onPreview }: {
               <option value="night-focus">Night / focus</option>
               <option value="day-break">Day / play break sequence</option>
               <option value="night-break">Night / play break sequence</option>
+              <option value="cat-visit">Day / play with cat</option>
+              <option value="back-stretch">Day / back stretch beside bed</option>
+              <option value="headphones-focus">Day / headphone work</option>
               <option value="raise-arms">Inspect: raising arms</option>
               <option value="stretch">Inspect: seated stretch</option>
               <option value="look-left">Inspect: looking left</option>

@@ -70,6 +70,19 @@ export const SLOTS: readonly Slot[] = [
   { id: 'developer-atlas', label: 'Unified character atlas', category: 'character', z: 70, spriteSheet: true },
   { id: 'developer-transition-sprites', label: 'Stretch transitions and thinking', category: 'character', z: 70, spriteSheet: true },
 
+  { id: 'developer-cat-sprites', label: 'Direct cat play', category: 'character', z: 70, spriteSheet: true },
+
+  { id: 'developer-exercise-sprites', label: 'Back stretch', category: 'character', z: 70, spriteSheet: true },
+  { id: 'developer-headphone-sprites', label: 'Headphone work and thinking', category: 'character', z: 70, spriteSheet: true },
+
+
+  { id: 'developer-work-inbetweens', label: 'work intermediate frames', category: 'character', z: 70, spriteSheet: true },
+  { id: 'developer-break-inbetweens', label: 'break intermediate frames', category: 'character', z: 70, spriteSheet: true },
+  { id: 'developer-phones-inbetweens', label: 'phones intermediate frames', category: 'character', z: 70, spriteSheet: true },
+
+  { id: 'developer-cat-smooth', label: 'Cat play, four frames', category: 'character', z: 70, spriteSheet: true },
+  { id: 'developer-exercise-smooth', label: 'Back stretch, four frames', category: 'character', z: 70, spriteSheet: true },
+
   // Living things
   { id: 'developer-sprites', label: 'Developer, four frames', category: 'character', z: 70, spriteSheet: true },
   { id: 'developer-break-sprites', label: 'Developer break movements', category: 'character', z: 70, spriteSheet: true },

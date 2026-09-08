@@ -9,7 +9,7 @@ describe('break movement sequence', () => {
   it('plays intermediate poses in reverse when lowering the arms', () => {
     const cell = (ms: number) => { const p = breakFrame(FOCUS_MS + ms, 'stretching'); return atlasFrame(p.sheet, p.frame); };
     expect([600, 820, 1040, 1300, 5800, 6060, 6280, 6500].map(cell))
-      .toEqual([9, 10, 4, 5, 4, 10, 9, 8]);
+      .toEqual([16, 17, 4, 5, 18, 10, 9, 8]);
     expect(cell(48000)).toBe(11);
   });
   it('raises arms before stretching, lowers them, and rests', () => {

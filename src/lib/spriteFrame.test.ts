@@ -18,12 +18,12 @@ describe('developer sprite timing', () => {
   });
   it('resolves to the same frame after a hidden tab resumes', () => {
     expect(spriteFrame(17300 * 500 + 4200, 'focus')).toBe(1);
-    expect(spriteFrame(4280, 'focus')).toBe(0);
+    expect(spriteFrame(4280, 'focus')).toBe(4);
   });
   it('has sparse blinks, alternating work frames, and long still pauses', () => {
     expect(spriteFrame(4120, 'focus')).toBe(1);
-    expect(spriteFrame(900, 'focus')).toBe(2);
-    expect(spriteFrame(1080, 'focus')).toBe(0);
+    expect(spriteFrame(900, 'focus')).toBe(6);
+    expect(spriteFrame(1080, 'focus')).toBe(5);
     expect(spriteFrame(15000, 'focus')).toBe(0);
   });
 });

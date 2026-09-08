@@ -66,7 +66,7 @@ export function Room({ cycle, daylight, calm = false, preview = 'live' }: Props)
       {layeredProps ? <RoomLife calm={calm} phase={phase} /> : null}
 
       <DeveloperSprite phase={phase} calm={calm} activity={cycle.activity} inspectFrame={inspectFrame}
-        previewPlaying={inspecting && preview.endsWith('break')} />
+        previewPlaying={inspecting && (preview.endsWith('break') || ['cat-visit', 'back-stretch'].includes(preview))} activityPreview={inspecting ? preview : ''} />
       {assetUrl('room-base') && hasAsset('developer-sprites') ? (
         <Layer src={roomSrc!} z={75} className="room-foreground" />
       ) : null}

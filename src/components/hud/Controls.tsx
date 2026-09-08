@@ -73,10 +73,10 @@ export function Controls(p: Props) {
     <div ref={root} className="relative z-40" onBlur={(event) => {
       if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) setOpen(false);
     }}>
-      <button ref={trigger} type="button" aria-expanded={open} aria-controls={id}
+      <button ref={trigger} type="button" aria-label="Settings" title="Settings" aria-expanded={open} aria-controls={id}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex min-h-10 items-center gap-2 rounded-control border border-zinc-700 bg-zinc-950/85 px-4 py-2 text-[13px] text-zinc-200 hover:border-zinc-500">
-        <GearSix size={17} /> Settings
+        className="inline-flex min-h-10 items-center rounded-control gap-2 border border-zinc-700 bg-zinc-950/85 px-3 py-2 text-[13px] text-zinc-200 hover:border-zinc-500 cursor-pointer">
+        <GearSix size={17} />
       </button>
       {open ? (
         <section ref={panel} id={id} aria-label="Room settings"

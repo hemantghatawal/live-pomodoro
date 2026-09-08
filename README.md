@@ -1,46 +1,38 @@
 # Live Pomodoro
 
-A developer is always mid-pomodoro in his room. You open the page and he is already seventeen minutes into a focus block, so you join a rhythm that is already moving instead of starting one.
+An animated room with a shared 25-minute focus / 5-minute break rhythm. The clock is derived from absolute time, so refreshing or reopening the tab restores the current session. Lighting follows each visitor's local time.
 
-The cycle is derived from the Unix epoch rather than from your click, so every visitor on earth sees the identical state at the identical moment. It is a shared clock, not a personal one. **He starts focusing on the hour and the half hour.**
+The first release includes working and headphone poses, seated and standing stretches, direct cat play, ambient room movement, saved preferences, optional desktop notifications/chimes, and screen wake lock. Live presence and screen artwork are deferred. Walking and pushups are intentionally excluded.
 
-The room is lit by your own local time, so the shared rhythm arrives in your light.
+## Develop and verify
 
-Outside the window there is a power line. Every person focusing right now is a bird sitting on it.
+Use Node.js 22.12+ and npm.
 
-## How it works
-
-Twenty five minutes of focus, five minutes of break, forever. A thirty minute cycle divides the day into exactly forty eight blocks, which is why it lands on `:00` and `:30`.
-
+```sh
+npm ci
+npm run dev
+npm test
+npm run build
+npm run preview
 ```
-elapsed  = Date.now() % 1_800_000
-phase    = elapsed < 1_500_000 ? 'focus' : 'break'
-```
 
-The clock needs no server. The only networked feature is the live count of people focusing alongside you, and the room works perfectly without it.
+`npm run art` regenerates runtime WebP sheets from the retained source art. It is not required during deployment: the reviewed runtime images are committed.
 
-## Stack
+## Deploy
 
-| Layer | Choice |
-|---|---|
-| Build | Vite 6, React 19, TypeScript strict |
-| Styling | Tailwind v4 for HUD, plain CSS for the scene |
-| Animation | CSS keyframes plus one rAF loop, Motion for birds only |
-| Tests | Vitest |
-| Presence | Cloudflare Durable Object, WebSocket Hibernation |
-| Hosting | Cloudflare Pages and Workers, one project |
+Build output is a standalone static site in `dist/`. No API keys, database, or presence server are needed. `.openai/hosting.json` identifies the private Sites staging deployment. The root `wrangler.toml` also supports Cloudflare Workers Static Assets without a Worker entry point; with Cloudflare access configured, use `npx wrangler deploy` after building.
 
-One `requestAnimationFrame` loop writes CSS custom properties onto the root element and CSS does everything else. React renders the DOM once and then essentially never re-renders, except the countdown text at 1Hz. There is no per-frame React work anywhere in this project.
+See [Cloudflare static asset configuration](https://developers.cloudflare.com/workers/static-assets/binding/) for the hosting contract.
 
-## Documentation
+## Browser behavior
 
-| File | Contents |
-|---|---|
-| [PLAN.md](PLAN.md) | Full build plan: design read, clock math, art pipeline, motion spec, architecture |
-| [DEV_LEARN.md](DEV_LEARN.md) | The techniques behind this, taught from the code, with resources |
-| [ART_PROMPTS.md](ART_PROMPTS.md) | Ready-to-paste prompts for all 35 art assets |
-| [PROGRESS.md](PROGRESS.md) | Task tracker, phases 0 to 10, including the asset generation checklist |
+- Calm and reduced-motion preferences suppress character activities.
+- The countdown recomputes from the current clock after tab visibility changes.
+- Notifications require browser permission and an open page. Browsers may delay alerts in background tabs; closed-page push notifications are not supported. Some mobile browsers do not support desktop notifications.
+- Sound needs a user interaction to unlock browser audio, including after a reload. Switch Sound on to hear a sample.
+- Wake lock depends on browser support, visibility and battery policy.
+- Preferences stay in local storage; the app has no accounts or visitor-count collection.
 
-## Development
+## Release notes
 
-Not yet scaffolded. See Phase 0 in [PROGRESS.md](PROGRESS.md).
+[RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) records validation and outstanding checks. [PROGRESS.md](PROGRESS.md) tracks scope. [art/SPRITE_WORKFLOW.md](art/SPRITE_WORKFLOW.md) documents the current art and prompts; earlier plans are historical.

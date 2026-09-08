@@ -1,0 +1,5 @@
+# Intermediate frames
+
+Built-in image generation. Source: art/src/developer-break-inbetweens.png; included in src/assets/room/developer-atlas.webp.
+
+Production animation IN-BETWEEN frames. Exact1536x1024 image, strict2x2 grid equal768x512cells. Match the supplied original developer reference exactly: brown skin, messyblackhair, rustshirt, face identity, clean flat2Dcartoon. Pure#FF00FF background no texture/shadow/room/text. All four waist-up front-seated poses SAME headwidth190, hair topy40, torsocenterx384, waistbottomy480 in EACHcell. Keep head and torso stable, only change requested moving parts; modest movements, no exaggerated expressions. Top-left: hands just lifting away from waist, elbows low. Top-right: hands at shoulder height, elbows midway raised outward, between chest-high hands and hands beside cheeks. Bottom-left: hands moving from beside ears toward behind head, elbows up and out, intermediate stretch. Bottom-right: head just slightly turned LEFT halfway from front-facing to a left glance, hands relaxed at waist. Never cross cell edges. Preserve reference linework and proportions.

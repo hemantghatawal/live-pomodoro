@@ -1,0 +1,5 @@
+# Intermediate frames
+
+Built-in image generation. Source: art/src/developer-work-inbetweens.png; included in src/assets/room/developer-atlas.webp.
+
+Production animation IN-BETWEEN frames. Exact1536x1024 image, strict2x2 grid equal768x512cells. Match the supplied original developer reference exactly: brown skin, messyblackhair, rustshirt, face identity, clean flat2Dcartoon. Pure#FF00FF background no texture/shadow/room/text. All four waist-up front-seated poses SAME headwidth190, hair topy40, torsocenterx384, waistbottomy480 in EACHcell. Keep head and torso stable, only change requested moving parts; modest movements, no exaggerated expressions. Top-left: same working pose with HALF-CLOSED eyelids, an intermediate blink. Top-right: eyes down typing, right fingers slightly raised, wrists stay planted. Bottom-left: eyes down typing, left fingers slightly raised, wrists stay planted. Bottom-right: eyes slightly lifted and mouth beginning a small smile, halfway to a contented glance. Never cross cell edges. Preserve reference linework and proportions.

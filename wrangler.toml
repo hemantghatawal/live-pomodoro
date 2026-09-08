@@ -1,21 +1,7 @@
-# Presence backend. Not wired up until Phase 9.
-#
-# One Durable Object instance is the room. Clients hold a WebSocket open for
-# hours at a time, which is exactly what Hibernation is built for: idle
-# connections cost essentially nothing.
-
+# Static first release. Live presence is deferred; no Worker or database required.
 name = "live-pomodoro"
-main = "worker/room.ts"
-compatibility_date = "2026-09-04"
+compatibility_date = "2026-09-08"
 
 [assets]
 directory = "dist"
 not_found_handling = "single-page-application"
-
-[[durable_objects.bindings]]
-name = "ROOM"
-class_name = "Room"
-
-[[migrations]]
-tag = "v1"
-new_sqlite_classes = ["Room"]
