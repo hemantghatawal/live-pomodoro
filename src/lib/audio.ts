@@ -17,7 +17,7 @@ let ctx: AudioContext | null = null;
 export function ensureAudio(): boolean {
   if (typeof window === 'undefined') return false;
   if (ctx) {
-    if (ctx.state === 'suspended') void ctx.resume();
+    if (ctx.state === 'suspended') void ctx.resume().catch(() => {});
     return true;
   }
   const Ctor: Ctor | undefined =
@@ -25,6 +25,7 @@ export function ensureAudio(): boolean {
   if (!Ctor) return false;
   try {
     ctx = new Ctor();
+    if (ctx.state === 'suspended') void ctx.resume().catch(() => {});
     return true;
   } catch {
     return false;
@@ -57,7 +58,15 @@ function note(at: number, hz: number, seconds: number, peak: number): void {
 }
 
 export function playChime(phase: Phase): void {
-  if (!ensureAudio() || !ctx) return;
+  if (!ctx) return;
+  if (ctx.state === 'suspended') {
+    const pending = ctx;
+    void pending.resume().then(() => {
+      if (ctx === pending && pending.state === 'running') playChime(phase);
+    }).catch(() => {});
+    return;
+  }
+  if (ctx.state !== 'running') return;
   const [a, b] = NOTES[phase];
   const t = ctx.currentTime;
   note(t, a, 0.55, 0.1);
@@ -65,6 +74,6 @@ export function playChime(phase: Phase): void {
 }
 
 export function closeAudio(): void {
-  void ctx?.close();
+  void ctx?.close().catch(() => {});
   ctx = null;
 }

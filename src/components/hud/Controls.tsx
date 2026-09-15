@@ -19,7 +19,7 @@ function Toggle({ on, disabled, label, hint, OnIcon, OffIcon, onClick }: ToggleP
     <div className="py-3">
       <button type="button" role="switch" aria-checked={on} aria-label={label}
         aria-describedby={description} disabled={disabled} onClick={onClick}
-        className="flex min-h-9 w-full items-center gap-3 rounded-md text-left text-sm text-zinc-100 disabled:cursor-not-allowed disabled:opacity-45">
+        className="flex min-h-11 w-full items-center gap-3 rounded-md text-left text-sm text-zinc-100 disabled:cursor-not-allowed disabled:opacity-45">
         <Icon size={18} />
         <span className="flex-1">{label}</span>
         <span className={`rounded-full px-2.5 py-1 text-xs ${on && !disabled ? 'bg-ember/15 text-ember' : 'bg-zinc-800 text-zinc-400'}`}>
@@ -75,7 +75,7 @@ export function Controls(p: Props) {
     }}>
       <button ref={trigger} type="button" aria-label="Settings" title="Settings" aria-expanded={open} aria-controls={id}
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex min-h-10 items-center rounded-control gap-2 border border-zinc-700 bg-zinc-950/85 px-3 py-2 text-[13px] text-zinc-200 hover:border-zinc-500 cursor-pointer">
+        className="inline-flex min-h-11 min-w-11 items-center rounded-control gap-2 border border-zinc-700 bg-zinc-950/85 px-3 py-2 text-[13px] text-zinc-200 hover:border-zinc-500 cursor-pointer">
         <GearSix size={17} />
       </button>
       {open ? (
@@ -84,7 +84,7 @@ export function Controls(p: Props) {
           <div className="mb-1 flex items-center justify-between">
             <h2 className="text-sm font-medium text-zinc-100">Room settings</h2>
             <button type="button" aria-label="Close settings" onClick={close}
-              className="-mr-2 rounded-full p-2 text-zinc-400 hover:text-zinc-100"><X size={18} /></button>
+              className="-mr-2 min-h-11 min-w-11 flex items-center justify-center rounded-full p-2 text-zinc-400 hover:text-zinc-100"><X size={18} /></button>
           </div>
           <Toggle on={p.calm} label="Calm" hint="Pause movement and hide thought bubbles. The timer keeps running."
             OnIcon={Leaf} OffIcon={Leaf} onClick={p.onCalm} />
@@ -93,7 +93,7 @@ export function Controls(p: Props) {
               : p.notifyPermission === 'denied' ? 'Allow notifications for this site in your browser settings.'
               : 'Get focus and break alerts while the page is open. Requires browser permission.'}
             OnIcon={Bell} OffIcon={BellSlash} onClick={p.onNotify} />
-          <Toggle on={p.sound} label="Sound" hint="A short chime when focus or break starts. Turning this on plays a sample."
+          <Toggle on={p.sound} label="Sound" hint="A short chime at each change. After reloading, tap anywhere to enable saved sound."
             OnIcon={SpeakerSimpleHigh} OffIcon={SpeakerSimpleSlash} onClick={p.onSound} />
           <Toggle on={p.awake} label="Keep awake" disabled={!p.wakeLockSupported}
             hint={p.wakeLockSupported ? 'Keep the screen awake while this page is visible. Battery-saving settings may override this.'

@@ -11,9 +11,9 @@ import { cycleState, formatCountdown, nextFocusStart, type Phase } from '../lib/
 import { daylight, type DaylightStop } from '../lib/daylight';
 
 /**
- * The single animation loop for the whole site.
+ * The wall-clock scheduler for the timer and room lighting.
  *
- * It writes CSS custom properties onto the document element every frame and
+ * It writes CSS custom properties onto the document element once per second and
  * lets CSS do the rest, so no component re-renders per frame. React state is
  * touched only when something a human could actually read has changed, which
  * in practice means once a second.
@@ -60,7 +60,7 @@ function view(now: number): CycleView {
 function key(v: CycleView): string {
   // Daylight is bucketed here on purpose: it drives which variant renders, and
   // a continuous value would re-render every frame for an invisible change.
-  return `${v.phase}|${v.countdown}|${v.stop}|${v.activity}|${v.pose}|${v.screen}|${v.daylightLevel < 0.3 ? 'dark' : 'lit'}`;
+  return `${v.cycleIndex}|${v.phase}|${v.countdown}|${v.stop}|${v.activity}|${v.pose}|${v.screen}|${v.daylightLevel < 0.3 ? 'dark' : 'lit'}`;
 }
 
 export function useCycle(): CycleView {
@@ -72,11 +72,11 @@ export function useCycle(): CycleView {
     if (typeof window === 'undefined') return;
 
     const root = document.documentElement;
-    let frame = 0;
+    let timer = 0;
 
     /**
      * Only touch the CSSOM when a value actually moved. --progress drives the
-     * sundial and the timer dial so it needs every frame; daylight shifts over
+     * sundial and the timer dial so one-second updates are sufficient; daylight shifts over
      * hours and would be pure waste at 60Hz.
      */
     const put = (name: string, value: number, epsilon: number) => {
@@ -115,24 +115,24 @@ export function useCycle(): CycleView {
         setState(next);
       }
 
-      frame = requestAnimationFrame(tick);
+      // Timers continue in background tabs when browsers permit it. Re-read
+      // absolute time rather than accumulating delayed ticks.
+      timer = window.setTimeout(tick, 1000 - Date.now() % 1000);
     };
 
-    frame = requestAnimationFrame(tick);
+    tick();
 
     // Coming back from a hidden tab or a sleeping laptop: recompute from wall
     // clock immediately rather than showing a stale second for one frame.
     const onVisible = () => {
-      if (document.visibilityState !== 'visible') return;
+      window.clearTimeout(timer);
       written.current = {};
-      const next = view(Date.now());
-      lastKey.current = key(next);
-      setState(next);
+      tick();
     };
     document.addEventListener('visibilitychange', onVisible);
 
     return () => {
-      cancelAnimationFrame(frame);
+      window.clearTimeout(timer);
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, []);

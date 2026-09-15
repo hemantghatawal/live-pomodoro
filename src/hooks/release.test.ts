@@ -50,3 +50,28 @@ it('does not create desktop alerts without permission and survives unsupported d
   create.mockImplementation(() => { throw new Error('Unsupported constructor'); });
   expect(() => notifyPhase('break')).not.toThrow();
 });
+
+
+it('advances through a full focus and break without animation frames, then cleans up', async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(1800000 * 100);
+  vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
+  const changed = vi.fn();
+  const node = document.createElement('div');
+  const root = createRoot(node);
+  function Probe() {
+    const state = useCycle();
+    usePhaseTransition(state.phase, changed);
+    return createElement('p', null, `${state.phase} ${state.countdown}`);
+  }
+  await act(async () => root.render(createElement(Probe)));
+  expect(node.textContent).toBe('focus 25:00');
+  await act(async () => { vi.advanceTimersByTime(25 * 60000); });
+  expect(node.textContent).toBe('break 05:00');
+  expect(changed).toHaveBeenCalledExactlyOnceWith('break');
+  await act(async () => { vi.advanceTimersByTime(5 * 60000); });
+  expect(node.textContent).toBe('focus 25:00');
+  expect(changed.mock.calls).toEqual([['break'], ['focus']]);
+  await act(async () => root.unmount());
+  expect(vi.getTimerCount()).toBe(0);
+});

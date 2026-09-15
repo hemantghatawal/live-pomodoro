@@ -20,13 +20,26 @@ export function DeveloperSprite({ phase, calm, activity, inspectFrame = -1, prev
   const breakSrc = assetUrl('developer-break-sprites');
   const atlas = assetUrl('developer-atlas');
   const [decoded, setDecoded] = useState(false);
+  const [floorReady, setFloorReady] = useState<Set<string>>(() => new Set());
   useEffect(() => {
     let cancelled = false;
     setDecoded(false);
-    const urls = [atlas ?? src, catSrc, exerciseSrc, headphoneSrc].filter((url): url is string => Boolean(url));
-    void Promise.all(urls.map(url => { const image = new Image(); image.src = url; return image.decode(); })).then(() => { if (!cancelled) setDecoded(true); }).catch(() => {
+    const load = async (url: string) => {
+      const image = new Image();
+      image.src = url;
+      await image.decode();
+    };
+    // Show the seated character as soon as its atlas is ready. Break assets
+    // load independently; a missing sheet must never hide the character.
+    const seated = atlas ?? src;
+    if (seated) void load(seated).then(() => {
       if (!cancelled) setDecoded(true);
-    });
+    }).catch(() => {});
+    for (const url of [catSrc, exerciseSrc]) {
+      if (url) void load(url).then(() => {
+        if (!cancelled) setFloorReady(previous => new Set([...previous, url]));
+      }).catch(() => {});
+    }
     return () => { cancelled = true; };
   }, [atlas, src, catSrc, exerciseSrc, headphoneSrc]);
 
@@ -46,7 +59,7 @@ export function DeveloperSprite({ phase, calm, activity, inspectFrame = -1, prev
         ? { sheet: 'developer-break-sprites' as const, frame: inspectFrame, action: 'inspect' }
         : phase === 'break' && breakSrc ? breakFrame(now, activity, still) : null;
       const candidate = phase === 'break' && inspectFrame < 0 ? floorActivity(now, still) : null;
-      const floor = candidate && assetUrl(candidate.sheet) ? candidate : null;
+      const floor = candidate && floorReady.has(assetUrl(candidate.sheet) ?? '') ? candidate : null;
       el.style.opacity = floor ? '0' : '1';
       const actor = floorRef.current;
       if (actor) {
@@ -100,7 +113,7 @@ export function DeveloperSprite({ phase, calm, activity, inspectFrame = -1, prev
       document.removeEventListener('visibilitychange', sync);
       reduced.removeEventListener('change', sync);
     };
-  }, [phase, calm, src, breakSrc, activity, inspectFrame, previewPlaying, atlas, decoded, catSrc, exerciseSrc, headphoneSrc, activityPreview]);
+  }, [phase, calm, src, breakSrc, activity, inspectFrame, previewPlaying, atlas, decoded, catSrc, exerciseSrc, headphoneSrc, activityPreview, floorReady]);
 
   if (!src) return null;
   return <><div ref={ref} aria-hidden className="developer-sprite" data-phase={phase}

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AmbientBackdrop } from './components/scene/AmbientBackdrop';
 import { Room } from './components/scene/Room';
 import { Controls } from './components/hud/Controls';
@@ -22,6 +22,28 @@ export function App() {
   const [permission, setPermission] = useState(notifyState);
   const [preview, setPreview] = useState<ScenePreview>('live');
   const { supported: wakeLockSupported } = useWakeLock(prefs.awake);
+
+  // Saved sound preferences still need a fresh gesture after navigation.
+  useEffect(() => {
+    if (!prefs.sound) return;
+    const unlock = () => { ensureAudio(); };
+    document.addEventListener('pointerdown', unlock);
+    document.addEventListener('keydown', unlock);
+    return () => {
+      document.removeEventListener('pointerdown', unlock);
+      document.removeEventListener('keydown', unlock);
+    };
+  }, [prefs.sound]);
+
+  useEffect(() => {
+    const refresh = () => setPermission(notifyState());
+    document.addEventListener('visibilitychange', refresh);
+    window.addEventListener('focus', refresh);
+    return () => {
+      document.removeEventListener('visibilitychange', refresh);
+      window.removeEventListener('focus', refresh);
+    };
+  }, []);
 
   useDocumentTitle(cycle.countdown, cycle.phase);
 
@@ -70,7 +92,7 @@ export function App() {
         <header className="flex items-start justify-between gap-6">
           <Wordmark />
           <Controls
-            notify={prefs.notify}
+            notify={prefs.notify && permission === 'granted'}
             notifyPermission={permission}
             sound={prefs.sound}
             awake={prefs.awake}

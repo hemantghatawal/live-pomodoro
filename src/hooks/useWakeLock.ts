@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
  */
 
 interface WakeLockSentinelLike {
+  released?: boolean;
   release(): Promise<void>;
 }
 
@@ -28,18 +29,22 @@ export function useWakeLock(enabled: boolean): { supported: boolean } {
 
     let sentinel: WakeLockSentinelLike | null = null;
     let cancelled = false;
+    let acquiring = false;
 
     const acquire = async () => {
-      if (document.visibilityState !== 'visible') return;
+      if (document.visibilityState !== 'visible' || acquiring || (sentinel && !sentinel.released)) return;
+      acquiring = true;
       try {
         const next = await api()?.request('screen');
-        if (cancelled) {
-          void next?.release();
+        if (cancelled || document.visibilityState !== 'visible') {
+          void next?.release().catch(() => {});
           return;
         }
         sentinel = next ?? null;
       } catch {
         // Denied, low battery, or unsupported in this context. Degrade silently.
+      } finally {
+        acquiring = false;
       }
     };
 
@@ -49,7 +54,7 @@ export function useWakeLock(enabled: boolean): { supported: boolean } {
     return () => {
       cancelled = true;
       document.removeEventListener('visibilitychange', acquire);
-      void sentinel?.release();
+      void sentinel?.release().catch(() => {});
     };
   }, [enabled, supported]);
 

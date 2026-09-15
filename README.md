@@ -29,7 +29,7 @@ See [Cloudflare static asset configuration](https://developers.cloudflare.com/wo
 - Calm and reduced-motion preferences suppress character activities.
 - The countdown recomputes from the current clock after tab visibility changes.
 - Notifications require browser permission and an open page. Browsers may delay alerts in background tabs; closed-page push notifications are not supported. Some mobile browsers do not support desktop notifications.
-- Sound needs a user interaction to unlock browser audio, including after a reload. Switch Sound on to hear a sample.
+- Sound needs a user interaction to unlock browser audio, including after a reload. With Sound saved on, tap anywhere or press a key after reloading to unlock it. Switching Sound on plays a sample.
 - Wake lock depends on browser support, visibility and battery policy.
 - Preferences stay in local storage; the app has no accounts or visitor-count collection.
 
